@@ -11,7 +11,6 @@ screen.fill((0,0,0))
 #set the fps
 clock = pygame.time.Clock()
 clock.tick(60)
-
 running = True
 
 while running:
@@ -25,7 +24,8 @@ while running:
     if keys[pygame.K_ESCAPE]:
         running = False
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("white")
+    screen.fill("black")
+    player = pygame.draw.rect(screen, "green", (50, 50, 20, 10))
 
     # RENDER YOUR GAME HERE
 
