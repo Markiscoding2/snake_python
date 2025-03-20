@@ -6,6 +6,13 @@ import rendering
 import random
 
 
+#add teleportation when u hit the wall
+#add the body of the snake
+#add the colision between the body and the head 
+#add a menu 
+
+
+
 pygame.init()
 
 screen = pygame.display.set_mode((1920,1080), FULLSCREEN)
