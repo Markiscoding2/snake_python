@@ -1,6 +1,9 @@
 import pygame
 import math
 from pygame import *
+import mov_func
+
+
 #initialize pygame
 pygame.init()
 screen = pygame.display.set_mode((1920,1080), FULLSCREEN)
@@ -13,6 +16,9 @@ clock = pygame.time.Clock()
 clock.tick(60)
 running = True
 
+dt = 0 #delta time / the difference in time since the last frame
+player_pos = Vector2(screen.get_width() / 2, screen.get_height() / 2)
+last_pressed_keys = [0,0,0,0]
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -20,18 +26,26 @@ while running:
         if event.type == pygame.QUIT:
             running = False
     # check for escape key to quit
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_ESCAPE]:
-        running = False
-    # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
-    player = pygame.draw.rect(screen, "green", (50, 50, 20, 10))
+    pygame.draw.rect(screen,"green",pygame.Rect(player_pos.x,player_pos.y,20,20))
+    current_pressed_key = pygame.key.get_pressed()
+    if current_pressed_key[pygame.K_ESCAPE]:
+        running = False
+    
+    mov_func.movement(last_pressed_keys,current_pressed_key)
 
-    # RENDER YOUR GAME HERE
-
-    # flip() the display to put your work on screen
     pygame.display.flip()
 
-    clock.tick(60)  # limits FPS to 60
+    if(last_pressed_keys[0]):
+        player_pos.x -= 5
+    if(last_pressed_keys[1]):  
+        player_pos.x += 5
+    if(last_pressed_keys[2]):
+        player_pos.y -= 5
+    if(last_pressed_keys[3]):
+        player_pos.y += 5
+        
+
+    dt = clock.tick(30)/1000  # limits FPS to 60
 
 pygame.quit()
