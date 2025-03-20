@@ -26,6 +26,7 @@ square_pos = Vector2(random.randrange(0,1920,20),random.randrange(0,1080,20))
 
 font = pygame.font.Font(None, 50)  # Use default font, size 50
 score=0
+
 last_pressed_keys = [0,0,0,0]
 while running:
 
@@ -39,7 +40,7 @@ while running:
 
     rendering.rendering(screen,player_pos,square_pos,font,score)
     
-    mov_func.current_direction(last_pressed_keys,player_pos)
+    running = mov_func.current_direction(last_pressed_keys,player_pos,running)
 
     pygame.display.flip()
     clock.tick(10)

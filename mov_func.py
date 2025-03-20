@@ -3,12 +3,11 @@ import math
 from pygame import *
 import random
 
-def current_direction(last_pressed_keys,player_pos):
+def current_direction(last_pressed_keys,player_pos,running):
     current_pressed_key = pygame.key.get_pressed()
     
     if current_pressed_key[pygame.K_ESCAPE]:
         running = False
-        pygame.quit()
     if current_pressed_key[pygame.K_a]:
         last_pressed_keys[0] = True
         last_pressed_keys[1] = False
@@ -29,14 +28,15 @@ def current_direction(last_pressed_keys,player_pos):
         last_pressed_keys[1] = False
         last_pressed_keys[2] = False
         last_pressed_keys[3] = True
-    if(last_pressed_keys[0]):
+    if(last_pressed_keys[0] and player_pos.x > 20):
         player_pos.x -= 20
-    if(last_pressed_keys[1]):  
+    if(last_pressed_keys[1] and player_pos.x < 1900):  
         player_pos.x += 20
-    if(last_pressed_keys[2]):
+    if(last_pressed_keys[2] and player_pos.y > 20):
         player_pos.y -= 20
-    if(last_pressed_keys[3]):
+    if(last_pressed_keys[3] and player_pos.y < 1060):
         player_pos.y += 20
+    return running
     
 def player_and_apple_movement(player_pos,square_pos,score):
     if player_pos.x == square_pos[0] and player_pos.y == square_pos[1]: 
