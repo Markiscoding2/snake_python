@@ -3,7 +3,7 @@ import math
 from pygame import *
 import random
 
-def current_direction(last_pressed_keys,player_pos,running):
+def current_direction(last_pressed_keys,player_pos,running,elements):
     current_pressed_key = pygame.key.get_pressed()
     
     if current_pressed_key[pygame.K_ESCAPE]:
@@ -28,20 +28,37 @@ def current_direction(last_pressed_keys,player_pos,running):
         last_pressed_keys[1] = False
         last_pressed_keys[2] = False
         last_pressed_keys[3] = True
+
+    player_pos_changed = False
+    old_plr_x=player_pos.x
+    old_plr_y=player_pos.y
     if(last_pressed_keys[0] and player_pos.x > 20):
         player_pos.x -= 20
+        player_pos_changed = True
     if(last_pressed_keys[1] and player_pos.x < 1900):  
         player_pos.x += 20
+        player_pos_changed = True
     if(last_pressed_keys[2] and player_pos.y > 20):
         player_pos.y -= 20
+        player_pos_changed = True
     if(last_pressed_keys[3] and player_pos.y < 1060):
         player_pos.y += 20
+        player_pos_changed = True
+    
+    if player_pos_changed :
+        if len(elements) != 0:
+            for i in range(len(elements) - 1, 0, -1):
+                elements[i] = elements[i-1]
+            elements[0]=[old_plr_x,old_plr_y]
+
+    
     return running
     
-def player_and_apple_movement(player_pos,square_pos,score):
+def player_and_apple_movement(player_pos,square_pos,score,elements):
     if player_pos.x == square_pos[0] and player_pos.y == square_pos[1]: 
-        square_pos[0] = random.randrange(0,1920,20)
-        square_pos[1] = random.randrange(0,1080,20)
+        square_pos[0] = random.randrange(20,1900,20)
+        square_pos[1] = random.randrange(20,1060,20)
         score+=1
+        elements.append([player_pos.x,player_pos.y])
     return score
         
