@@ -7,8 +7,7 @@ import random
 
 
 #add teleportation when u hit the wall
-#add the body of the snake
-#add the colision between the body and the head 
+
 #add a menu 
 
 
@@ -30,11 +29,10 @@ running = True
 
 player_pos = Vector2(screen.get_width() / 2, screen.get_height() / 2)
 square_pos = Vector2(random.randrange(0,1920,20),random.randrange(0,1080,20))
-
+other_player_segments = [] 
 font = pygame.font.Font(None, 50)  # Use default font, size 50
 score=0
 
-elements = [] 
 
 last_pressed_keys = [0,0,0,0]
 while running:
@@ -45,9 +43,9 @@ while running:
 
     screen.fill("black")
 
-    score=mov_func.player_and_apple_movement(player_pos,square_pos,score,elements)    
-    running = mov_func.current_direction(last_pressed_keys,player_pos,running,elements)
-    rendering.rendering(screen,player_pos,square_pos,font,score,elements)
+    score=mov_func.player_and_apple_movement(player_pos,square_pos,score,other_player_segments)    
+    running = mov_func.current_direction(last_pressed_keys,player_pos,running,other_player_segments)
+    rendering.rendering(screen,player_pos,square_pos,font,score,other_player_segments)
 
 
     pygame.display.flip()

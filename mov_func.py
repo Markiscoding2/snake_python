@@ -8,22 +8,22 @@ def current_direction(last_pressed_keys,player_pos,running,elements):
     
     if current_pressed_key[pygame.K_ESCAPE]:
         running = False
-    if current_pressed_key[pygame.K_a]:
+    if current_pressed_key[pygame.K_a] and last_pressed_keys[1] == False or len(elements) == 0 and current_pressed_key[pygame.K_a]:
         last_pressed_keys[0] = True
         last_pressed_keys[1] = False
         last_pressed_keys[2] = False
         last_pressed_keys[3] = False
-    elif current_pressed_key[pygame.K_d]:
+    if current_pressed_key[pygame.K_d] and last_pressed_keys[0] == False or len(elements) == 0 and current_pressed_key[pygame.K_d]:
         last_pressed_keys[0] = False
         last_pressed_keys[1] = True
         last_pressed_keys[2] = False
         last_pressed_keys[3] = False
-    elif current_pressed_key[pygame.K_w]:    
+    if current_pressed_key[pygame.K_w] and last_pressed_keys[3] == False or len(elements) == 0 and current_pressed_key[pygame.K_w]:     
         last_pressed_keys[0] = False
         last_pressed_keys[1] = False
         last_pressed_keys[2] = True
         last_pressed_keys[3] = False
-    elif current_pressed_key[pygame.K_s]:
+    if current_pressed_key[pygame.K_s] and last_pressed_keys[2] == False or len(elements) == 0 and current_pressed_key[pygame.K_s]: 
         last_pressed_keys[0] = False
         last_pressed_keys[1] = False
         last_pressed_keys[2] = False
@@ -32,7 +32,7 @@ def current_direction(last_pressed_keys,player_pos,running,elements):
     player_pos_changed = False
     old_plr_x=player_pos.x
     old_plr_y=player_pos.y
-    if(last_pressed_keys[0] and player_pos.x > 20):
+    if(last_pressed_keys[0] and player_pos.x > 20 ):
         player_pos.x -= 20
         player_pos_changed = True
     if(last_pressed_keys[1] and player_pos.x < 1900):  
