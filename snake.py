@@ -3,6 +3,7 @@ import math
 from pygame import *
 import random
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 
 #add teleportation when u hit the wall
@@ -60,6 +61,22 @@ from menu import *
 #fix menu issues and complete
         
 
+=======
+from player import Player
+from game_data import GData
+from menu import *
+#add teleportation when u hit the wall
+#add classes
+#refactor code
+#add options
+#fix WASTED text
+#add sound
+#add music
+#add background
+#fix menu issues and complete
+        
+
+>>>>>>> Stashed changes
 gdata = GData()
 player = Player(gdata.screen)
 
@@ -105,6 +122,9 @@ while gdata.running:
         player.Score = player.Eating() 
         gdata.running = player.Movement(gdata.running)
         rendering(gdata,player,main_menu,GO_menu)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 
