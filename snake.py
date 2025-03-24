@@ -54,8 +54,8 @@ while gdata.running:
         GO_menu.menu_rendering(gdata,player,main_menu)
         
     else:
-        player.Score = player.Eating() 
-        gdata.running = player.Movement(gdata.running)
+        player.Eating() 
+        player.Movement(gdata.running)
         rendering(gdata,player,main_menu,GO_menu)
     pygame.display.flip()
     gdata.clock.tick(20)
