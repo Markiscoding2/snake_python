@@ -56,16 +56,16 @@ class GO_Menu:
 
 
 def rendering(gdata,player,main_menu,GO_menu):
-    pygame.draw.rect(gdata.screen,"red",pygame.Rect(player.Apple_Position[0],player.Apple_Position[1],20,20))
-    pygame.draw.rect(gdata.screen,"green",pygame.Rect(player.Position.x,player.Position.y,20,20))
+    pygame.draw.rect(gdata.screen,"red",pygame.Rect(player.Apple_Position[0],player.Apple_Position[1],40,40))
+    pygame.draw.rect(gdata.screen,"green",pygame.Rect(player.Position.x,player.Position.y,40,40))
     if len(player.Segments) !=0 :
         for i in player.Segments:
             if i[0] == player.Position.x and i[1] == player.Position.y:
-                player.Position.x = gdata.screen.get_width() / 2
-                player.Position.y = gdata.screen.get_height() / 2
+                player.Position.x = 800
+                player.Position.y = 640
                 player.Segments.clear()
                 player.Score = 0
                 player.Dead = True
                 main_menu.menu_showed = False
-            pygame.draw.rect(gdata.screen,"green",pygame.Rect(i[0],i[1],20,20))
+            pygame.draw.rect(gdata.screen,"green",pygame.Rect(i[0],i[1],40,40))
     gdata.screen.blit(gdata.font.render('Score:' + str(player.Score), True, (255, 255, 255)), (20, 20))

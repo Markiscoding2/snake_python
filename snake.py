@@ -1,3 +1,5 @@
+import pygame
+from pygame import *
 from player import Player
 from game_data import GData
 from menu import *
@@ -54,8 +56,9 @@ while gdata.running:
         GO_menu.menu_rendering(gdata,player,main_menu)
         
     else:
+        gdata.screen.blit(pygame.image.load('imgsrc\grid\grid.png'), (0,0))
         player.Eating() 
-        player.Movement(gdata.running)
+        player.Movement(gdata)
         rendering(gdata,player,main_menu,GO_menu)
     pygame.display.flip()
     gdata.clock.tick(20)
