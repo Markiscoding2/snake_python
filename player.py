@@ -63,8 +63,6 @@ class Player:
                     self.Segments[i] = self.Segments[i-1]
                 self.Segments[0]=[old_plr_x,old_plr_y]
 
-        
-        return running
     
 
     def Eating(self):
@@ -73,5 +71,4 @@ class Player:
             self.Apple_Position[1] = random.randrange(20,1060,20)
             self.Score+=1
             self.add_segment()
-        return self.Score
         
