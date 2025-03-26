@@ -62,34 +62,3 @@ class MENU:
 
     
 
-def rendering(gdata,player,main_menu):
-    PLAYER_X = player.Position.x
-    PLAYER_Y = player.Position.y
-
-    APPLE_X = player.Apple_Position.x
-    APPLE_Y = player.Apple_Position.y
-
-    GRID_SIZE = player.GRID_SIZE
-
-    PLAYER_COLOR = "green"
-    APPLE_COLOR = "red"
-    
-    SCORE_AS_STRING = str(player.Score)
-
-    NUMBER_SEGMENTS=len(player.Segments)
-
-    pygame.draw.rect(gdata.screen, APPLE_COLOR ,pygame.Rect(APPLE_X,APPLE_Y,GRID_SIZE,GRID_SIZE))
-    pygame.draw.rect(gdata.screen, PLAYER_COLOR ,pygame.Rect(PLAYER_X,PLAYER_Y,GRID_SIZE,GRID_SIZE))
-    if NUMBER_SEGMENTS !=0 :
-        for i in player.Segments:
-            SEGMENT_X = i[0]
-            SEGMENT_Y = i[1]
-            if SEGMENT_X == PLAYER_X and SEGMENT_Y == PLAYER_Y:
-                player.Position.x = 800
-                player.Position.y = 640
-                player.Segments.clear()
-                player.Score = 0
-                player.Dead = True
-                main_menu.menu_showed = False
-            pygame.draw.rect(gdata.screen,PLAYER_COLOR,pygame.Rect(SEGMENT_X,SEGMENT_Y,GRID_SIZE,GRID_SIZE))
-    gdata.screen.blit(gdata.font.render('Score:' + SCORE_AS_STRING , True, (255, 255, 255)), (GRID_SIZE, GRID_SIZE))

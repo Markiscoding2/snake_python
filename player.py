@@ -1,5 +1,6 @@
 import pygame
 import random
+from collections import deque    
 from pygame import *
 
 
@@ -18,9 +19,9 @@ class Player:
         self.APPLE_HEIGHT = 1080
 
         self.Position = Vector2(self.START_WIDTH, self.START_HEIGHT)
-        self.Current_Direction = [0,0,0,0]
+        self.direction = Vector2(0,0)
 
-        self.Segments = [] 
+        self.Segments = deque() 
         self.Score = 0
         
         self.Dead = False
@@ -36,61 +37,32 @@ class Player:
     def Movement(self,gdata):
 
         current_pressed_key = pygame.key.get_pressed()
-
-        LEFT=self.Current_Direction[1]
-        RIGHT=self.Current_Direction[0]
-        UP = self.Current_Direction[2]
-        DOWN = self.Current_Direction[3]
-        
         NUMBER_SEGMENTS=len(self.Segments)
 
         if current_pressed_key[pygame.K_ESCAPE]:
             gdata.running = False
-        if current_pressed_key[pygame.K_a] and RIGHT == False or NUMBER_SEGMENTS == 0 and current_pressed_key[pygame.K_a]:
-            self.Current_Direction[0] = True
-            self.Current_Direction[1] = False
-            self.Current_Direction[2] = False
-            self.Current_Direction[3] = False
-        if current_pressed_key[pygame.K_d] and LEFT == False or NUMBER_SEGMENTS == 0 and current_pressed_key[pygame.K_d]:
-            self.Current_Direction[0] = False
-            self.Current_Direction[1] = True
-            self.Current_Direction[2] = False
-            self.Current_Direction[3] = False
-        if current_pressed_key[pygame.K_w] and DOWN == False or NUMBER_SEGMENTS == 0 and current_pressed_key[pygame.K_w]:     
-            self.Current_Direction[0] = False
-            self.Current_Direction[1] = False
-            self.Current_Direction[2] = True
-            self.Current_Direction[3] = False
-        if current_pressed_key[pygame.K_s] and UP == False or NUMBER_SEGMENTS == 0 and current_pressed_key[pygame.K_s]: 
-            self.Current_Direction[0] = False
-            self.Current_Direction[1] = False
-            self.Current_Direction[2] = False
-            self.Current_Direction[3] = True
-
-        self_pos_changed = False
-        old_plr_x=self.Position.x
-        old_plr_y=self.Position.y
+        if current_pressed_key[pygame.K_a] and self.direction.x == 0 or NUMBER_SEGMENTS == 0 and current_pressed_key[pygame.K_a]:
+            self.direction = Vector2(-1,0)
+        if current_pressed_key[pygame.K_d] and self.direction.x == 0 or NUMBER_SEGMENTS == 0 and current_pressed_key[pygame.K_d]:
+            self.direction = Vector2(1,0)
+        if current_pressed_key[pygame.K_w] and self.direction.y == 0 or NUMBER_SEGMENTS == 0 and current_pressed_key[pygame.K_w]:     
+            self.direction = Vector2(0,-1)
+        if current_pressed_key[pygame.K_s] and self.direction.y == 0 or NUMBER_SEGMENTS == 0 and current_pressed_key[pygame.K_s]: 
+            self.direction = Vector2(0,1)
         
-        if(RIGHT and self.Position.x > self.X_BOUNDS[1] ):
-            self.Position.x -= self.GRID_SIZE
-            self_pos_changed = True
-        if(LEFT and self.Position.x < self.X_BOUNDS[0]):  
-            self.Position.x += self.GRID_SIZE
-            self_pos_changed = True
-        if(UP and self.Position.y > self.Y_BOUNDS[1]):
-            self.Position.y -= self.GRID_SIZE
-            self_pos_changed = True
-        if(DOWN and self.Position.y < self.Y_BOUNDS[0]):
-            self.Position.y += self.GRID_SIZE
-            self_pos_changed = True
+        if self.direction == Vector2(0,0):
+            return
         
-        if self_pos_changed :
-            if NUMBER_SEGMENTS != 0:
-                for i in range(NUMBER_SEGMENTS - 1, 0, -1):
-                    self.Segments[i] = self.Segments[i-1]
-                self.Segments[0]=[old_plr_x,old_plr_y]
+        new_position = self.Position + self.direction * self.GRID_SIZE
 
-    
+        if self.X_BOUNDS[1] < new_position.x < self.X_BOUNDS[0] and self.Y_BOUNDS[1] < new_position.y < self.Y_BOUNDS[0]:
+            old_position = self.Position
+            self.Position = new_position
+
+            if self.Segments:
+                self.Segments.appendleft(old_position)
+                self.Segments.pop()
+
 
     def Eating(self):
         PLAYER_X = self.Position.x
@@ -103,4 +75,35 @@ class Player:
             self.Score+=1
             self.add_segment()
 
+    def rendering(self,gdata,main_menu):
+        PLAYER_X = self.Position.x
+        PLAYER_Y = self.Position.y
+
+        APPLE_X = self.Apple_Position.x
+        APPLE_Y = self.Apple_Position.y
+
+        GRID_SIZE = self.GRID_SIZE
+
+        PLAYER_COLOR = "green"
+        APPLE_COLOR = "red"
         
+        SCORE_AS_STRING = str(self.Score)
+
+        NUMBER_SEGMENTS=len(self.Segments)
+
+        pygame.draw.rect(gdata.screen, APPLE_COLOR ,pygame.Rect(APPLE_X,APPLE_Y,GRID_SIZE,GRID_SIZE))
+        pygame.draw.rect(gdata.screen, PLAYER_COLOR ,pygame.Rect(PLAYER_X,PLAYER_Y,GRID_SIZE,GRID_SIZE))
+        if NUMBER_SEGMENTS !=0 :
+            for i in range(NUMBER_SEGMENTS):
+                SEGMENT_X = self.Segments[i][0]
+                SEGMENT_Y = self.Segments[i][1]
+                if SEGMENT_X == PLAYER_X and SEGMENT_Y == PLAYER_Y:
+                    self.Position.x = 800
+                    self.Position.y = 640
+                    self.Segments.clear()
+                    self.Score = 0
+                    self.Dead = True
+                    main_menu.menu_showed = False
+                    return
+                pygame.draw.rect(gdata.screen,PLAYER_COLOR,pygame.Rect(SEGMENT_X,SEGMENT_Y,GRID_SIZE,GRID_SIZE))
+        gdata.screen.blit(gdata.font.render('Score:' + SCORE_AS_STRING , True, (255, 255, 255)), (GRID_SIZE, GRID_SIZE))

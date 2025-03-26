@@ -58,7 +58,7 @@ while gdata.running:
         gdata.screen.blit(pygame.image.load('imgsrc\grid\grid.png'), (0,0))
         player.Eating() 
         player.Movement(gdata)
-        rendering(gdata,player,main_menu)
+        player.rendering(gdata,main_menu)
     pygame.display.flip()
 
 pygame.quit()
