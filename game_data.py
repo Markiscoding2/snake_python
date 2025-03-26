@@ -10,6 +10,11 @@ class GData:
  
         self.screen = pygame.display.set_mode((1920,1080), FULLSCREEN)
         self.screen.fill((0,0,0))
+        
+        self.S_WIDTH = self.screen.get_width()
+        self.S_HEIGHT = self.screen.get_height()
+
+        self.BUTTONS_WIDTH=196
 
         self.clock = pygame.time.Clock()
         self.clock.tick(10)

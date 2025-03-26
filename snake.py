@@ -15,13 +15,13 @@ from menu import *
         
 
 gdata = GData()
-player = Player(gdata.screen)
+player = Player()
 
 game_over_menu = [
     pygame.image.load('imgsrc/game_over/restart.png'),
     pygame.image.load('imgsrc/game_over/quit.png')
 ]
-slected_game_over = [
+selected_game_over = [
     pygame.image.load('imgsrc/game_over/restart_selected.png'),
     pygame.image.load('imgsrc/game_over/quit_selected.png')
 ]
@@ -31,13 +31,13 @@ options = [
     pygame.image.load('imgsrc/menu/options.png'),
     pygame.image.load('imgsrc/menu/quit.png')
 ]
-slected_options = [
+selected_options = [
     pygame.image.load('imgsrc/menu/start_selected.png'),
     pygame.image.load('imgsrc/menu/options_selected.png'),
     pygame.image.load('imgsrc/menu/quit_selected.png')
 ]
-main_menu = Menu(options,slected_options)
-GO_menu = GO_Menu(game_over_menu,slected_game_over)
+main_menu = MENU(options, selected_options)
+GO_menu = MENU(game_over_menu, selected_game_over)
 
 while gdata.running:
     gdata.clock.tick(10)
@@ -50,17 +50,16 @@ while gdata.running:
     gdata.screen.fill("black")
 
     if main_menu.menu_showed == False and player.Dead == False:
-        main_menu.menu_rendering(gdata)
+        main_menu.print_menu(gdata)
 
     elif main_menu.menu_showed == False and player.Dead == True:
-        GO_menu.menu_rendering(gdata,player,main_menu)
+        GO_menu.goprint_menu(player,gdata,main_menu)
         
     else:
         gdata.screen.blit(pygame.image.load('imgsrc\grid\grid.png'), (0,0))
         player.Eating() 
         player.Movement(gdata)
-        rendering(gdata,player,main_menu,GO_menu)
+        rendering(gdata,player,main_menu)
     pygame.display.flip()
-    gdata.clock.tick(20)
 
 pygame.quit()
