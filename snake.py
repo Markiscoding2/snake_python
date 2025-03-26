@@ -51,7 +51,6 @@ while gdata.running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gdata.running = False
-
     gdata.screen.fill("black")
 
     if main_menu.menu_showed == False and player.dead == False:
