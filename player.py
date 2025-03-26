@@ -58,10 +58,7 @@ class Player:
 
         new_position = self.position + self.direction * self.GRID_SIZE
 
-        if (
-            self.X_BOUNDS[1] < new_position.x < self.X_BOUNDS[0]
-            and self.Y_BOUNDS[1] < new_position.y < self.Y_BOUNDS[0]
-        ):
+        if self.X_BOUNDS[1] < new_position.x < self.X_BOUNDS[0] and self.Y_BOUNDS[1] < new_position.y < self.Y_BOUNDS[0]:
             old_position = self.position
             self.position = new_position
 
