@@ -102,12 +102,8 @@ class Player:
             PLAYER_COLOR,
             pygame.Rect(PLAYER_X, PLAYER_Y, GRID_SIZE, GRID_SIZE),
         )
-        for (
-            segment
-        ) in self.segments:  # pentru fiecare segment in segmentele jucatorului
-            if (
-                segment == self.position
-            ):  # daca segmentul este in pozitia jucatorului atunci jucatorul moare
+        for segment in self.segments:  # pentru fiecare segment in segmentele jucatorului
+            if segment == self.position :  # daca segmentul este in pozitia jucatorului atunci jucatorul moare
                 self.position = (800, 640)
                 self.segments.clear()
                 self.score = 0
