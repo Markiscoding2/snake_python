@@ -42,6 +42,7 @@ class MENU:
 
         if not player.Dead:
             if self.selected_index == 0:
+                player.__init__()  # Reset Player
                 main_menu.menu_showed = False  # Return to main menu
             elif self.selected_index == 1:
                 gdata.running = False 

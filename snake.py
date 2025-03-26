@@ -5,7 +5,6 @@ from game_data import GData
 from menu import *
 #add teleportation when u hit the wall
 #add classes
-#refactor code
 #add options
 #fix WASTED text
 #add sound
