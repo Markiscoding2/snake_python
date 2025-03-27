@@ -11,11 +11,10 @@ class Player:
         self.START_WIDTH = 800
         self.START_HEIGHT = 640
 
-        self.X_BOUNDS = [1880, 0]
-        self.Y_BOUNDS = [1040, 0]
+        self.X_BOUNDS = 1880
+        self.Y_BOUNDS = 1040
 
-        self.APPLE_WIDTH = 1880
-        self.APPLE_HEIGHT = 1040
+        self.apple_sprite = pygame.image.load("src/sprites/apple.png")
 
         self.position = Vector2(self.START_WIDTH, self.START_HEIGHT)
         self.direction = Vector2(0, 0)
@@ -25,8 +24,8 @@ class Player:
 
         self.dead = False
         self.apple_position = Vector2(
-            random.randrange(self.GRID_SIZE, self.APPLE_WIDTH, self.GRID_SIZE),
-            random.randrange(self.GRID_SIZE, self.APPLE_HEIGHT, self.GRID_SIZE),
+            random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
+            random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE),
         )
 
     def add_segment(self):
@@ -58,7 +57,7 @@ class Player:
 
         new_position = self.position + self.direction * self.GRID_SIZE
 
-        if self.X_BOUNDS[1] < new_position.x < self.X_BOUNDS[0] and self.Y_BOUNDS[1] < new_position.y < self.Y_BOUNDS[0]:
+        if 0 < new_position.x < self.X_BOUNDS and 0 < new_position.y < self.Y_BOUNDS:
             old_position = self.position
             self.position = new_position
 
@@ -67,14 +66,14 @@ class Player:
                 self.segments.pop()
 
     def Eating(self):
-        EATING_SFX = pygame.mixer.Sound("src\SFX\eating_SFX.mp3")
 
         if self.position == self.apple_position:
-
+            EATING_SFX = pygame.mixer.Sound("src\SFX\eating_SFX.mp3")
             EATING_SFX.play()
+
             self.apple_position = Vector2(
-                random.randrange(self.GRID_SIZE, self.APPLE_WIDTH, self.GRID_SIZE),
-                random.randrange(self.GRID_SIZE, self.APPLE_WIDTH, self.GRID_SIZE),
+                random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
+                random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE),
             )
             self.score += 1
             self.add_segment()
@@ -82,25 +81,30 @@ class Player:
     def rendering(self, gdata, main_menu):
         PLAYER_X, PLAYER_Y = self.position
 
-        APPLE_X, APPLE_Y = self.apple_position
+        # APPLE_X, APPLE_Y = self.apple_position
 
         GRID_SIZE = self.GRID_SIZE
 
         PLAYER_COLOR = "green"
-        APPLE_COLOR = "red"
 
-        pygame.draw.rect(
-            gdata.screen,
-            APPLE_COLOR,
-            pygame.Rect(APPLE_X, APPLE_Y, GRID_SIZE, GRID_SIZE),
+        gdata.screen.blit(
+            self.apple_sprite,
+            (
+                self.apple_position.x,
+                self.apple_position.y,
+            ),
         )
         pygame.draw.rect(
             gdata.screen,
             PLAYER_COLOR,
             pygame.Rect(PLAYER_X, PLAYER_Y, GRID_SIZE, GRID_SIZE),
         )
-        for segment in self.segments:  # pentru fiecare segment in segmentele jucatorului
-            if segment == self.position :  # daca segmentul este in pozitia jucatorului atunci jucatorul moare
+        for (
+            segment
+        ) in self.segments:  # pentru fiecare segment in segmentele jucatorului
+            if (
+                segment == self.position
+            ):  # daca segmentul este in pozitia jucatorului atunci jucatorul moare
                 self.position = (800, 640)
                 self.segments.clear()
                 self.score = 0

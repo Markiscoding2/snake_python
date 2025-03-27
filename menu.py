@@ -55,9 +55,9 @@ class Menu:
         self.render_menu(gdata)
 
         if current_menu_key[pygame.K_RETURN]:
-            player.Dead = False  # Revive player
+            player.dead = False  # Revive player
 
-        if not player.Dead:
+        if not player.dead:
             if self.selected_index == 0:
                 player.__init__()  # Reset Player
                 main_menu.menu_showed = False  # Return to main menu

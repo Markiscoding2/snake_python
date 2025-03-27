@@ -5,13 +5,11 @@ from game_data import GData
 from menu import *
 
 # add teleportation when u hit the wall
-# add classes
 # add options
 # fix WASTED text
 # add sound
 # add music
 # add background
-# fix menu issues and complete
 
 
 gdata = GData()
@@ -21,6 +19,7 @@ game_over_menu = [
     pygame.image.load("src/game_over/restart.png"),
     pygame.image.load("src/game_over/quit.png"),
 ]
+
 selected_game_over = [
     pygame.image.load("src/game_over/restart_selected.png"),
     pygame.image.load("src/game_over/quit_selected.png"),
