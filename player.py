@@ -14,6 +14,7 @@ class Player:
         self.X_BOUNDS = 1880
         self.Y_BOUNDS = 1040
 
+        self.snake_sprites = pygame.image.load("src/sprites/snake_sprites.png")
         self.apple_sprite = pygame.image.load("src/sprites/apple.png")
 
         self.position = Vector2(self.START_WIDTH, self.START_HEIGHT)
@@ -70,6 +71,18 @@ class Player:
         if self.position == self.apple_position:
             EATING_SFX = pygame.mixer.Sound("src\SFX\eating_SFX.mp3")
             EATING_SFX.play()
+            axy = Vector2(
+                random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
+                random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE)
+            )
+            for i in range(len(self.segments)):
+                if axy == self.segments :
+                    axy = Vector2(
+                        random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
+                        random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE)
+                    )
+                    i = 0 
+            
 
             self.apple_position = Vector2(
                 random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
