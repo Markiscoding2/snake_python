@@ -36,17 +36,16 @@ selected_options = [
     pygame.image.load("src/menu/quit_selected.png"),
 ]
 main_menu = Menu(options, selected_options)
-GO_menu = Menu(game_over_menu, selected_game_over)
+go_menu = Menu(game_over_menu, selected_game_over)
 
 game_ost = pygame.mixer.Sound("src\OST\ost.mp3")
 
 test = True
 
 while gdata.running:
-
-    gdata.clock.tick(10)
+    gdata.clock.tick(gdata.difficulty)
     pygame.display.flip()
-
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gdata.running = False
@@ -57,7 +56,7 @@ while gdata.running:
 
     elif main_menu.menu_showed == False and player.dead == True:
         game_ost.stop()
-        GO_menu.goprint_menu(player, gdata, main_menu)
+        go_menu.goprint_menu(player, gdata, main_menu)
         if test == False:
             game_ost.stop()
             test = True

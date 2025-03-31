@@ -64,13 +64,15 @@ class Menu:
             elif self.selected_index == 1:
                 gdata.running = False
 
+
+
     def print_menu(self, gdata):
         CURRENT_MENU_KEY = self.handle_input()
         self.render_menu(gdata)
 
         if CURRENT_MENU_KEY[pygame.K_RETURN]:
             self.menu_showed = True
-
+        
         if self.selected_index == 1 and self.menu_showed == True:
             print("options")
         if self.selected_index == 2 and self.menu_showed == True:

@@ -14,11 +14,12 @@ class GData:
 
         self.S_WIDTH = self.screen.get_width()
         self.S_HEIGHT = self.screen.get_height()
-
+        
         self.BUTTONS_WIDTH = 196
 
         self.clock = pygame.time.Clock()
-        self.clock.tick(10)
+        self.difficulty = 10
+        self.clock.tick(self.difficulty)
 
         self.running = True
 

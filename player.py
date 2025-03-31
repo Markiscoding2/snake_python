@@ -14,7 +14,6 @@ class Player:
         self.X_BOUNDS = 1880
         self.Y_BOUNDS = 1040
 
-        self.snake_sprites = pygame.image.load("src/sprites/snake_sprites.png")
         self.apple_sprite = pygame.image.load("src/sprites/apple.png")
 
         self.position = Vector2(self.START_WIDTH, self.START_HEIGHT)
@@ -35,15 +34,14 @@ class Player:
     def Movement(self, gdata):
 
         current_pressed_key = pygame.key.get_pressed()
-        nr_segments = len(self.segments)
-
         if current_pressed_key[pygame.K_ESCAPE]:
             gdata.running = False
 
-        if current_pressed_key[pygame.K_a] and self.direction.x == 0:
+
+        if current_pressed_key[pygame.K_a] and self.direction.x == 0 and not current_pressed_key[pygame.K_w] and not current_pressed_key[pygame.K_s] :
             self.direction = Vector2(-1, 0)
 
-        if current_pressed_key[pygame.K_d] and self.direction.x == 0:
+        if current_pressed_key[pygame.K_d] and self.direction.x == 0 and not current_pressed_key[pygame.K_w] and not current_pressed_key[pygame.K_s]:
             self.direction = Vector2(1, 0)
 
         if current_pressed_key[pygame.K_w] and self.direction.y == 0:
