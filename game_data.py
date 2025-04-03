@@ -18,7 +18,7 @@ class GData:
         self.BUTTONS_WIDTH = 196
 
         self.options_showed = False
-        self.difficulty = 10
+        self.difficulty = 20
         self.solid_wall = False
         self.golden_apple = False
         

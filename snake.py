@@ -3,7 +3,7 @@ from pygame import *
 from player import Player
 from game_data import GData
 from menu import *
-
+from load_sprites import *
 # add teleportation when u hit the wall
 # add options
 # fix WASTED text
@@ -15,12 +15,12 @@ from menu import *
 gdata = GData()
 player = Player()
 
-game_over_menu = [
+game_over_menu_images = [
     pygame.image.load("src/game_over/restart.png"),
     pygame.image.load("src/game_over/quit.png"),
 ]
 
-selected_game_over = [
+game_over_menu_selected_images = [
     pygame.image.load("src/game_over/restart_selected.png"),
     pygame.image.load("src/game_over/quit_selected.png"),
 ]
@@ -30,64 +30,57 @@ main_menu_images = [
     pygame.image.load("src/menu/options.png"),
     pygame.image.load("src/menu/quit.png"),
 ]
-selected_options = [
+main_menu_selected_images = [
     pygame.image.load("src/menu/start_selected.png"),
     pygame.image.load("src/menu/options_selected.png"),
     pygame.image.load("src/menu/quit_selected.png"),
 ]
 
-options_menu = [
+options_menu_images = [
     pygame.image.load("src/menu/difficulty.png"),
     pygame.image.load("src/menu/solid_walls.png"),
     pygame.image.load("src/menu/golden_apple.png"),
     pygame.image.load("src/menu/quit.png")
 ]
-selected_options_menu = [
+options_menu_selected_images = [
     pygame.image.load("src/menu/difficulty_selected.png"),
     pygame.image.load("src/menu/solid_walls_selected.png"),
     pygame.image.load("src/menu/golden_apple_selected.png"),
     pygame.image.load("src/menu/quit_selected.png")
 ]
 
-main_menu = Menu(main_menu_images, selected_options)
-go_menu = Menu(game_over_menu, selected_game_over)
-options_menu = Menu(options_menu,selected_options_menu)
-game_ost = pygame.mixer.Sound("src\OST\ost.mp3")
+main_menu = Menu(main_menu_images, main_menu_selected_images)
+go_menu = Menu(game_over_menu_images, game_over_menu_selected_images)
+options_menu_images = Menu(options_menu_images,options_menu_selected_images)
+background_music = pygame.mixer.Sound("src\OST\ost.mp3")
 
-test = True
+music_playing = True
 
 while gdata.running:
     pygame.display.flip()
-    
+    gdata.clock.tick(20)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gdata.running = False
-    gdata.screen.fill("black")
-
-    if main_menu.menu_showed == False and player.dead == False and gdata.options_showed==False:
-        gdata.clock.tick(0)
-        main_menu.print_menu(gdata)
-
-    elif main_menu.menu_showed == False and player.dead == True:
-        gdata.clock.tick(0)
-        game_ost.stop()
-        go_menu.goprint_menu(player, gdata, main_menu)
-        if test == False:
-            game_ost.stop()
-            test = True
-    elif main_menu.menu_showed == False and gdata.options_showed == True:
-        gdata.clock.tick(0)
-        options_menu.options_menu(gdata,main_menu)
+    
+    gdata.screen.fill("black")    
+    if not main_menu.menu_showed:
+        if not player.dead and not gdata.options_showed:
+            main_menu.print_menu(gdata)
+        elif player.dead:
+            background_music.stop()
+            go_menu.goprint_menu(player, gdata, main_menu)
+        elif gdata.options_showed:
+            options_menu_images.options_menu(gdata, main_menu)
     else:
         gdata.clock.tick(gdata.difficulty)
-        if test:
-            game_ost.play()
-            game_ost.set_volume(0.1)
-            test = False
-        #gdata.screen.blit(pygame.image.load('src\grid\grid.png'), (0,0))
+        if music_playing:
+            background_music.play()
+            background_music.set_volume(0.1)
+            music_playing = False
         player.Eating()
-        player.Movement(gdata)
+        player.Movement(gdata,main_menu)
         player.rendering(gdata, main_menu)
+    
     pygame.display.flip()
-
 pygame.quit()
