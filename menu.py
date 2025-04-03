@@ -50,16 +50,16 @@ class Menu:
                     ),
                 )
         
-    def options_menu(self,player,gdata,main_menu):
+    def options_menu(self,gdata,main_menu):
         current_menu_key = self.handle_input()
         self.render_menu(gdata)
-
+        gdata.clock.tick(10)
         if current_menu_key[pygame.K_RETURN]:
             if self.selected_index == 0:
-                if gdata.difficulty == 30:
+                if gdata.difficulty > 20:
                     gdata.difficulty = 10
                 else:
-                    gdata.difficulty += 10
+                    gdata.difficulty += 5
             elif self.selected_index == 1:
                 gdata.solid_wall = not gdata.solid_wall
             elif self.selected_index == 2:
@@ -71,7 +71,7 @@ class Menu:
     def goprint_menu(self, player, gdata, main_menu):
         current_menu_key = self.handle_input()
         self.render_menu(gdata)
-
+        gdata.clock.tick(10)
         if current_menu_key[pygame.K_RETURN]:
             player.dead = False  # Revive player
 
@@ -87,10 +87,11 @@ class Menu:
     def print_menu(self, gdata):
         CURRENT_MENU_KEY = self.handle_input()
         self.render_menu(gdata)
-
+        gdata.clock.tick(10)
         if CURRENT_MENU_KEY[pygame.K_RETURN]:
             self.menu_showed = True
         if self.selected_index == 1 and self.menu_showed == True:
             gdata.options_showed = True
+            self.menu_showed = False
         if self.selected_index == 2 and self.menu_showed == True:
             gdata.running = False
