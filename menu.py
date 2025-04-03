@@ -49,7 +49,25 @@ class Menu:
                         gdata.S_HEIGHT / 2 + 70 * i,
                     ),
                 )
+        
+    def options_menu(self,player,gdata,main_menu):
+        current_menu_key = self.handle_input()
+        self.render_menu(gdata)
 
+        if current_menu_key[pygame.K_RETURN]:
+            if self.selected_index == 0:
+                if gdata.difficulty == 30:
+                    gdata.difficulty = 10
+                else:
+                    gdata.difficulty += 10
+            elif self.selected_index == 1:
+                gdata.solid_wall = not gdata.solid_wall
+            elif self.selected_index == 2:
+                gdata.golden_apple = not gdata.golden_apple
+            elif self.selected_index == 3:
+                gdata.options_showed = False
+                main_menu.menu_showed = False
+        
     def goprint_menu(self, player, gdata, main_menu):
         current_menu_key = self.handle_input()
         self.render_menu(gdata)
@@ -72,8 +90,7 @@ class Menu:
 
         if CURRENT_MENU_KEY[pygame.K_RETURN]:
             self.menu_showed = True
-        
         if self.selected_index == 1 and self.menu_showed == True:
-            print("options")
+            gdata.options_showed = True
         if self.selected_index == 2 and self.menu_showed == True:
             gdata.running = False

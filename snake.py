@@ -25,7 +25,7 @@ selected_game_over = [
     pygame.image.load("src/game_over/quit_selected.png"),
 ]
 
-options = [
+main_menu_images = [
     pygame.image.load("src/menu/start.png"),
     pygame.image.load("src/menu/options.png"),
     pygame.image.load("src/menu/quit.png"),
@@ -35,9 +35,12 @@ selected_options = [
     pygame.image.load("src/menu/options_selected.png"),
     pygame.image.load("src/menu/quit_selected.png"),
 ]
-main_menu = Menu(options, selected_options)
-go_menu = Menu(game_over_menu, selected_game_over)
 
+
+
+main_menu = Menu(main_menu_images, selected_options)
+go_menu = Menu(game_over_menu, selected_game_over)
+#options_menu = 
 game_ost = pygame.mixer.Sound("src\OST\ost.mp3")
 
 test = True
@@ -60,6 +63,7 @@ while gdata.running:
         if test == False:
             game_ost.stop()
             test = True
+    #elif main_menu.menu_showed == False and gdata.options_showed == True:
 
     else:
         if test:
