@@ -3,7 +3,6 @@ from pygame import *
 from player import Player
 from game_data import GData
 from menu import *
-from load_sprites import *
 
 # add background
 # fix menu
@@ -27,26 +26,26 @@ game_over_menu_selected_images = [
 ]
 
 main_menu_images = [
-    pygame.image.load("src/menu/start.png"),
-    pygame.image.load("src/menu/options.png"),
+    pygame.image.load("src/menu/main_menu/start.png"),
+    pygame.image.load("src/menu/main_menu/options.png"),
     pygame.image.load("src/menu/quit.png"),
 ]
 main_menu_selected_images = [
-    pygame.image.load("src/menu/start_selected.png"),
-    pygame.image.load("src/menu/options_selected.png"),
+    pygame.image.load("src/menu/main_menu/start_selected.png"),
+    pygame.image.load("src/menu/main_menu/options_selected.png"),
     pygame.image.load("src/menu/quit_selected.png"),
 ]
 
 options_menu_images = [
-    pygame.image.load("src/menu/difficulty.png"),
-    pygame.image.load("src/menu/solid_walls.png"),
-    pygame.image.load("src/menu/golden_apple.png"),
+    pygame.image.load("src/menu/options/difficulty_easy.png"),
+    pygame.image.load("src/menu/options/no_walls.png"),
+    pygame.image.load("src/menu/options/golden_apple.png"),
     pygame.image.load("src/menu/quit.png")
 ]
 options_menu_selected_images = [
-    pygame.image.load("src/menu/difficulty_selected.png"),
-    pygame.image.load("src/menu/solid_walls_selected.png"),
-    pygame.image.load("src/menu/golden_apple_selected.png"),
+    pygame.image.load("src/menu/options/difficulty_easy_selected.png"),
+    pygame.image.load("src/menu/options/no_walls_selected.png"),
+    pygame.image.load("src/menu/options/golden_apple_selected.png"),
     pygame.image.load("src/menu/quit_selected.png")
 ]
 
@@ -57,7 +56,7 @@ background_music = pygame.mixer.Sound("src\OST\ost.mp3")
 
 while gdata.running:
     pygame.display.flip()
-    gdata.clock.tick(20)
+    gdata.clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gdata.running = False
