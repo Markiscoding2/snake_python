@@ -101,13 +101,11 @@ class Player:
                 random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
                 random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE)
             )
-            for i in range(len(self.segments)):
-                if axy == self.segments :
-                    axy = Vector2(
-                        random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
-                        random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE)
-                    )
-                    i = 0 
+            while any(segment == axy for segment in self.segments):
+                axy = Vector2(
+                    random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
+                    random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE),
+                )
             
 
             self.apple_position = Vector2(
@@ -138,12 +136,9 @@ class Player:
             PLAYER_COLOR,
             pygame.Rect(PLAYER_X, PLAYER_Y, GRID_SIZE, GRID_SIZE),
         )
-        for (
-            segment
-        ) in self.segments:  # pentru fiecare segment in segmentele jucatorului
-            if (
-                segment == self.position
-            ):  # daca segmentul este in pozitia jucatorului atunci jucatorul moare
+        for segment in self.segments:  # pentru fiecare segment in segmentele jucatorului
+            
+            if segment == self.position:  # daca segmentul este in pozitia jucatorului atunci jucatorul moare
                 self.position = (800, 640)
                 self.segments.clear()
                 self.score = 0

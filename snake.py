@@ -4,13 +4,14 @@ from player import Player
 from game_data import GData
 from menu import *
 from load_sprites import *
-# add teleportation when u hit the wall
-# add options
-# fix WASTED text
-# add sound
-# add music
-# add background
 
+# add background
+# fix menu
+# fix some logic
+# refactor code
+# add better sprites
+# implement some easter eggs for dia
+# add different soundtracks, and check when a soundtrack ends
 
 gdata = GData()
 player = Player()
@@ -54,8 +55,6 @@ go_menu = Menu(game_over_menu_images, game_over_menu_selected_images)
 options_menu_images = Menu(options_menu_images,options_menu_selected_images)
 background_music = pygame.mixer.Sound("src\OST\ost.mp3")
 
-music_playing = True
-
 while gdata.running:
     pygame.display.flip()
     gdata.clock.tick(20)
@@ -74,13 +73,13 @@ while gdata.running:
             options_menu_images.options_menu(gdata, main_menu)
     else:
         gdata.clock.tick(gdata.difficulty)
-        if music_playing:
+        if not gdata.music_playing:
             background_music.play()
             background_music.set_volume(0.1)
-            music_playing = False
+            gdata.music_playing = True
         player.Eating()
         player.Movement(gdata,main_menu)
         player.rendering(gdata, main_menu)
-    
-    pygame.display.flip()
+
+
 pygame.quit()

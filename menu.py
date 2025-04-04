@@ -1,6 +1,5 @@
 import pygame
 from pygame import *
-import random
 from game_data import GData
 from player import Player
 
@@ -21,8 +20,9 @@ class Menu:
     def handle_input(self):
         current_time = pygame.time.get_ticks()
         currrent_menu_key = pygame.key.get_pressed()
-
+        
         if current_time - self.last_key_press > self.key_delay:
+
             if currrent_menu_key[pygame.K_w] and self.selected_index > 0:
                 self.selected_index -= 1
                 self.last_key_press = current_time  # Update key press time
@@ -33,6 +33,7 @@ class Menu:
             
             if currrent_menu_key[pygame.K_RETURN]:
                 self.last_key_press = current_time  # Update key press time
+        
         return currrent_menu_key
     def render_menu(self, gdata):
         for i in range(self.NUMBER_OF_OPTIONS):
@@ -56,27 +57,26 @@ class Menu:
                 )
         
     def options_menu(self,gdata,main_menu):
+        #idea: create 3 seperate difficulty images: easy,medium,hard, implement logic by adding some booleans checking which difficulty is chosen based on the current framerate
+        #for the golden apple just check the current state and if true show under it
+        #for the wall do the same
         current_menu_key = self.handle_input()
         self.render_menu(gdata)
         gdata.clock.tick(20)
         if current_menu_key[pygame.K_RETURN]:
-            gdata.clock.tick(5)
             if self.selected_index == 0:
                 gdata.difficulty += 5
                 if gdata.difficulty > 30:
                     gdata.difficulty = 20
-                print(gdata.difficulty)
-
             elif self.selected_index == 1:
-                gdata.clock.tick(5)
                 gdata.solid_wall = not gdata.solid_wall
             elif self.selected_index == 2:
-                gdata.clock.tick(5)
                 gdata.golden_apple = not gdata.golden_apple
             elif self.selected_index == 3:
-                gdata.clock.tick(5)
                 gdata.options_showed = False
                 main_menu.menu_showed = False
+                self.selected_index = 2
+            pygame.time.wait(200)
 
 
 
@@ -86,10 +86,13 @@ class Menu:
         self.render_menu(gdata)
         if current_menu_key[pygame.K_RETURN]:
             player.dead = False  # Revive player
+            pygame.time.wait(200)
+
         if not player.dead:
             if self.selected_index == 0:
                 player.__init__()  # Reset Player
                 main_menu.menu_showed = False  # Return to main menu
+                gdata.music_playing = False
             elif self.selected_index == 1:
                 gdata.running = False
 
@@ -100,6 +103,8 @@ class Menu:
         self.render_menu(gdata)
         if CURRENT_MENU_KEY[pygame.K_RETURN]:
             self.menu_showed = True
+            pygame.time.wait(200)
+
 
         if self.selected_index == 1 and self.menu_showed == True:
             gdata.options_showed = True
