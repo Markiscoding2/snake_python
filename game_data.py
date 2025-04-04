@@ -32,3 +32,5 @@ class GData:
 
         self.alg = 0
         self.menu_showed = False
+    def reset(self):
+        self.__init__()

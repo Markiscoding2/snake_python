@@ -19,22 +19,22 @@ class Menu:
         self.key_delay = 200  
     def handle_input(self):
         current_time = pygame.time.get_ticks()
-        currrent_menu_key = pygame.key.get_pressed()
+        current_menu_key = pygame.key.get_pressed()
         
         if current_time - self.last_key_press > self.key_delay:
             
-            if currrent_menu_key[pygame.K_w] and self.selected_index > 0:
+            if current_menu_key[pygame.K_w] and self.selected_index > 0:
                 self.selected_index -= 1
                 self.last_key_press = current_time  
                 pygame.time.wait(100)
-            if currrent_menu_key[pygame.K_s] and self.selected_index < len(self.options) - 1:
+            if current_menu_key[pygame.K_s] and self.selected_index < len(self.options) - 1:
                 self.selected_index += 1
                 self.last_key_press = current_time  
                 pygame.time.wait(100)
-            if currrent_menu_key[pygame.K_RETURN]:
+            if current_menu_key[pygame.K_RETURN]:
                 self.last_key_press = current_time  
                 pygame.time.wait(100)
-        return currrent_menu_key
+        return current_menu_key
     def render_menu(self, gdata):
         for i in range(self.NUMBER_OF_OPTIONS):
             selected_image = self.selected_options[i]
@@ -73,7 +73,7 @@ class Menu:
                 self.selected_options[1] = pygame.image.load("src/menu/options/solid_walls_selected.png")
             else:
                 self.options[1] = pygame.image.load("src/menu/options/no_walls.png")
-                self.selected_options[1] = pygame.image.load("src/menu/no_walls_selected.png")
+                self.selected_options[1] = pygame.image.load("src/menu/options/no_walls_selected.png")
         elif choice == 2:
             if gdata.golden_apple:
                 self.options[2] = pygame.image.load("src/menu/options/golden_apple.png")
@@ -81,10 +81,12 @@ class Menu:
             else:
                 self.options[2] = pygame.image.load("src/menu/options/no_golden_apple.png")
                 self.selected_options[2] = pygame.image.load("src/menu/options/no_golden_apple_selected.png")
+    
     def options_menu(self,gdata,main_menu):
         current_menu_key = self.handle_input()
         self.render_menu(gdata)
         if current_menu_key[pygame.K_RETURN]:
+            pygame.time.wait(200)
             if self.selected_index == 0:
                 gdata.difficulty += 5
                 if gdata.difficulty > 30:
@@ -100,7 +102,7 @@ class Menu:
                 gdata.options_showed = False
                 main_menu.menu_showed = False
                 self.selected_index = 2
-            pygame.time.wait(100)
+
 
 
 

@@ -27,7 +27,8 @@ class Player:
             random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
             random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE),
         )
-
+    def reset(self):
+        self.__init__()
     def add_segment(self):
         self.segments.append([self.position.x, self.position.y])
 
@@ -97,21 +98,18 @@ class Player:
         if self.position == self.apple_position:
             EATING_SFX = pygame.mixer.Sound("src\SFX\eating_SFX.mp3")
             EATING_SFX.play()
-            axy = Vector2(
+            apple_new_position = Vector2(
                 random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
                 random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE)
             )
-            while any(segment == axy for segment in self.segments):
-                axy = Vector2(
+            while any(segment == apple_new_position for segment in self.segments):
+                apple_new_position = Vector2(
                     random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
                     random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE),
                 )
             
 
-            self.apple_position = Vector2(
-                random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
-                random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE),
-            )
+            self.apple_position = apple_new_position
             self.score += 1
             self.add_segment()
 
@@ -139,9 +137,8 @@ class Player:
         for segment in self.segments:  # pentru fiecare segment in segmentele jucatorului
             
             if segment == self.position:  # daca segmentul este in pozitia jucatorului atunci jucatorul moare
-                self.position = (800, 640)
-                self.segments.clear()
-                self.score = 0
+                self.reset()
+                gdata.reset()
                 self.dead = True
                 main_menu.menu_showed = False
                 return

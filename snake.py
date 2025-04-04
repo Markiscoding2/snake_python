@@ -5,7 +5,6 @@ from game_data import GData
 from menu import *
 
 # add background
-# fix menu
 # fix some logic
 # refactor code
 # add better sprites
