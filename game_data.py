@@ -17,10 +17,15 @@ class GData:
         
         self.BUTTONS_WIDTH = 196
 
-        self.clock = pygame.time.Clock()
-        self.difficulty = 10
-        self.clock.tick(self.difficulty)
+        self.options_showed = False
+        self.difficulty = 20
+        self.solid_wall = False
+        self.golden_apple = False
+        self.music_playing = False
 
+        
+        self.clock = pygame.time.Clock()
+        self.clock.tick(self.difficulty)
         self.running = True
 
         self.font = pygame.font.Font(None, 50)

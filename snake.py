@@ -4,72 +4,81 @@ from player import Player
 from game_data import GData
 from menu import *
 
-# add teleportation when u hit the wall
-# add options
-# fix WASTED text
-# add sound
-# add music
 # add background
-
+# fix menu
+# fix some logic
+# refactor code
+# add better sprites
+# implement some easter eggs for dia
+# add different soundtracks, and check when a soundtrack ends
 
 gdata = GData()
 player = Player()
 
-game_over_menu = [
+game_over_menu_images = [
     pygame.image.load("src/game_over/restart.png"),
     pygame.image.load("src/game_over/quit.png"),
 ]
 
-selected_game_over = [
+game_over_menu_selected_images = [
     pygame.image.load("src/game_over/restart_selected.png"),
     pygame.image.load("src/game_over/quit_selected.png"),
 ]
 
-options = [
-    pygame.image.load("src/menu/start.png"),
-    pygame.image.load("src/menu/options.png"),
+main_menu_images = [
+    pygame.image.load("src/menu/main_menu/start.png"),
+    pygame.image.load("src/menu/main_menu/options.png"),
     pygame.image.load("src/menu/quit.png"),
 ]
-selected_options = [
-    pygame.image.load("src/menu/start_selected.png"),
-    pygame.image.load("src/menu/options_selected.png"),
+main_menu_selected_images = [
+    pygame.image.load("src/menu/main_menu/start_selected.png"),
+    pygame.image.load("src/menu/main_menu/options_selected.png"),
     pygame.image.load("src/menu/quit_selected.png"),
 ]
-main_menu = Menu(options, selected_options)
-go_menu = Menu(game_over_menu, selected_game_over)
 
-game_ost = pygame.mixer.Sound("src\OST\ost.mp3")
+options_menu_images = [
+    pygame.image.load("src/menu/options/difficulty_easy.png"),
+    pygame.image.load("src/menu/options/no_walls.png"),
+    pygame.image.load("src/menu/options/golden_apple.png"),
+    pygame.image.load("src/menu/quit.png")
+]
+options_menu_selected_images = [
+    pygame.image.load("src/menu/options/difficulty_easy_selected.png"),
+    pygame.image.load("src/menu/options/no_walls_selected.png"),
+    pygame.image.load("src/menu/options/golden_apple_selected.png"),
+    pygame.image.load("src/menu/quit_selected.png")
+]
 
-test = True
+main_menu = Menu(main_menu_images, main_menu_selected_images)
+go_menu = Menu(game_over_menu_images, game_over_menu_selected_images)
+options_menu_images = Menu(options_menu_images,options_menu_selected_images)
+background_music = pygame.mixer.Sound("src\OST\ost.mp3")
 
 while gdata.running:
-    gdata.clock.tick(gdata.difficulty)
     pygame.display.flip()
-    
+    gdata.clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gdata.running = False
-    gdata.screen.fill("black")
-
-    if main_menu.menu_showed == False and player.dead == False:
-        main_menu.print_menu(gdata)
-
-    elif main_menu.menu_showed == False and player.dead == True:
-        game_ost.stop()
-        go_menu.goprint_menu(player, gdata, main_menu)
-        if test == False:
-            game_ost.stop()
-            test = True
-
+    
+    gdata.screen.fill("black")    
+    if not main_menu.menu_showed:
+        if not player.dead and not gdata.options_showed:
+            main_menu.print_menu(gdata)
+        elif player.dead:
+            background_music.stop()
+            go_menu.goprint_menu(player, gdata, main_menu)
+        elif gdata.options_showed:
+            options_menu_images.options_menu(gdata, main_menu)
     else:
-        if test:
-            game_ost.play()
-            game_ost.set_volume(0.1)
-            test = False
-        # gdata.screen.blit(pygame.image.load('src\grid\grid.png'), (0,0))
+        gdata.clock.tick(gdata.difficulty)
+        if not gdata.music_playing:
+            background_music.play()
+            background_music.set_volume(0.1)
+            gdata.music_playing = True
         player.Eating()
-        player.Movement(gdata)
+        player.Movement(gdata,main_menu)
         player.rendering(gdata, main_menu)
-    pygame.display.flip()
+
 
 pygame.quit()

@@ -31,7 +31,7 @@ class Player:
     def add_segment(self):
         self.segments.append([self.position.x, self.position.y])
 
-    def Movement(self, gdata):
+    def Movement(self, gdata,main_menu):
 
         current_pressed_key = pygame.key.get_pressed()
         if current_pressed_key[pygame.K_ESCAPE]:
@@ -56,13 +56,41 @@ class Player:
 
         new_position = self.position + self.direction * self.GRID_SIZE
 
-        if 0 < new_position.x < self.X_BOUNDS and 0 < new_position.y < self.Y_BOUNDS:
-            old_position = self.position
-            self.position = new_position
+        if not gdata.solid_wall:
+            if new_position.x < 0:
+                new_position.x = self.X_BOUNDS
+            elif new_position.x > self.X_BOUNDS:
+                new_position.x = 0
+                
+            if new_position.y < 0:
+                new_position.y = self.Y_BOUNDS
+            elif new_position.y > self.Y_BOUNDS:
+                new_position.y = 0
+        
+            if 0 <= new_position.x <= self.X_BOUNDS and 0 <= new_position.y <= self.Y_BOUNDS:
+                old_position = self.position
+                self.position = new_position
 
-            if self.segments:
-                self.segments.appendleft(old_position)
-                self.segments.pop()
+                if self.segments:
+                    self.segments.appendleft(old_position)
+                    self.segments.pop()
+        else:
+            if new_position.x <= 0 or new_position.x >= self.X_BOUNDS or new_position.y <= 0 or new_position.y >= self.Y_BOUNDS:
+                self.dead = True
+                main_menu.menu_showed = False
+                self.position = (800, 640)
+                self.segments.clear()
+                self.score = 0
+                return
+
+            if 0 < new_position.x < self.X_BOUNDS and 0 < new_position.y < self.Y_BOUNDS:
+                old_position = self.position
+                self.position = new_position
+
+                if self.segments:
+                    self.segments.appendleft(old_position)
+                    self.segments.pop()
+
 
     def Eating(self):
 
@@ -73,13 +101,11 @@ class Player:
                 random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
                 random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE)
             )
-            for i in range(len(self.segments)):
-                if axy == self.segments :
-                    axy = Vector2(
-                        random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
-                        random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE)
-                    )
-                    i = 0 
+            while any(segment == axy for segment in self.segments):
+                axy = Vector2(
+                    random.randrange(self.GRID_SIZE, self.X_BOUNDS, self.GRID_SIZE),
+                    random.randrange(self.GRID_SIZE, self.Y_BOUNDS, self.GRID_SIZE),
+                )
             
 
             self.apple_position = Vector2(
@@ -110,12 +136,9 @@ class Player:
             PLAYER_COLOR,
             pygame.Rect(PLAYER_X, PLAYER_Y, GRID_SIZE, GRID_SIZE),
         )
-        for (
-            segment
-        ) in self.segments:  # pentru fiecare segment in segmentele jucatorului
-            if (
-                segment == self.position
-            ):  # daca segmentul este in pozitia jucatorului atunci jucatorul moare
+        for segment in self.segments:  # pentru fiecare segment in segmentele jucatorului
+            
+            if segment == self.position:  # daca segmentul este in pozitia jucatorului atunci jucatorul moare
                 self.position = (800, 640)
                 self.segments.clear()
                 self.score = 0
