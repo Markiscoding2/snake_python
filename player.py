@@ -83,7 +83,7 @@ class Player:
                     self.body_segments.pop()
         else:
             if new_position.x <= 0 or new_position.x >= self.MAX_X or new_position.y <= 0 or new_position.y >= self.MAX_Y:
-                self.is_dead = True
+                self.dead = True
                 main_menu.menu_showed = False
                 self.position = (self.START_X, self.START_Y)
                 self.body_segments.clear()
@@ -124,7 +124,7 @@ class Player:
                     random.randrange(self.GRID_SIZE, self.MAX_Y, self.GRID_SIZE)
                 )
             if game_data.golden_apple and not self.golden_apple_active:
-                if random.randint(0, 49) == 0:
+                if random.randint(0, 1) == 0:
                     self.golden_apple_active = True
                     for _ in range(5):
                         self.golden_apple_positions.append(
@@ -171,7 +171,7 @@ class Player:
             self.reset()
             game_data.reset()
             main_menu.menu_showed = False
-            self.is_dead = True
+            self.dead = True
             
         for segment in self.body_segments:
             pygame.draw.rect(
