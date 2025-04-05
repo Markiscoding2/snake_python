@@ -38,13 +38,13 @@ main_menu_selected_images = [
 options_menu_images = [
     pygame.image.load("src/menu/options/difficulty_easy.png"),
     pygame.image.load("src/menu/options/no_walls.png"),
-    pygame.image.load("src/menu/options/golden_apple.png"),
+    pygame.image.load("src/menu/options/no_golden_apple.png"),
     pygame.image.load("src/menu/quit.png")
 ]
 options_menu_selected_images = [
     pygame.image.load("src/menu/options/difficulty_easy_selected.png"),
     pygame.image.load("src/menu/options/no_walls_selected.png"),
-    pygame.image.load("src/menu/options/golden_apple_selected.png"),
+    pygame.image.load("src/menu/options/no_golden_apple_selected.png"),
     pygame.image.load("src/menu/quit_selected.png")
 ]
 
@@ -75,7 +75,7 @@ while gdata.running:
             background_music.play()
             background_music.set_volume(0.1)
             gdata.music_playing = True
-        player.Eating()
+        player.Eating(gdata)
         player.Movement(gdata,main_menu)
         player.rendering(gdata, main_menu)
 
