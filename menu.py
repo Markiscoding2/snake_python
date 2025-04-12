@@ -4,6 +4,11 @@ from game_data import GData
 from player import Player
 
 
+def get_sprite(spritesheet,width,height):
+    image = pygame.Surface((width,height)).convert_alpha
+    image.blit(spritesheet,(0,0),(0,0),width,height)
+    return image
+
 class Menu:
     def __init__(self, options, selected_options):
         self.options = options
@@ -35,6 +40,7 @@ class Menu:
                 self.last_key_press = current_time  
                 pygame.time.wait(100)
         return current_menu_key
+    
     def render_menu(self, gdata):
         for i in range(self.NUMBER_OF_OPTIONS):
             selected_image = self.selected_options[i]

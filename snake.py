@@ -18,7 +18,6 @@ game_over_menu_images = [
     pygame.image.load("src/game_over/restart.png"),
     pygame.image.load("src/game_over/quit.png"),
 ]
-
 game_over_menu_selected_images = [
     pygame.image.load("src/game_over/restart_selected.png"),
     pygame.image.load("src/game_over/quit_selected.png"),
@@ -29,6 +28,8 @@ main_menu_images = [
     pygame.image.load("src/menu/main_menu/options.png"),
     pygame.image.load("src/menu/quit.png"),
 ]
+main_menu_background = pygame.image.load("src/menu/main_menu/background.png")
+
 main_menu_selected_images = [
     pygame.image.load("src/menu/main_menu/start_selected.png"),
     pygame.image.load("src/menu/main_menu/options_selected.png"),
@@ -48,6 +49,9 @@ options_menu_selected_images = [
     pygame.image.load("src/menu/quit_selected.png")
 ]
 
+
+
+
 main_menu = Menu(main_menu_images, main_menu_selected_images)
 go_menu = Menu(game_over_menu_images, game_over_menu_selected_images)
 options_menu_images = Menu(options_menu_images,options_menu_selected_images)
@@ -60,8 +64,9 @@ while gdata.running:
         if event.type == pygame.QUIT:
             gdata.running = False
     
-    gdata.screen.fill("black")    
+    gdata.screen.fill("black")
     if not main_menu.menu_showed:
+        gdata.screen.blit(main_menu_background, (0, 0)) 
         if not player.dead and not gdata.options_showed:
             main_menu.print_menu(gdata)
         elif player.dead:

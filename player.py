@@ -6,10 +6,17 @@ from pygame import *
 def swap(a, b):
     return b, a
 
+
+
+
+
+
+
+
 class Player:
     def __init__(self):
         self.GRID_SIZE = 40
-
+        
         self.START_X = 800
         self.START_Y = 640
 
@@ -79,6 +86,7 @@ class Player:
                 self.position = new_position
 
                 if self.body_segments:
+
                     self.body_segments.appendleft(old_position)
                     self.body_segments.pop()
         else:
@@ -167,9 +175,11 @@ class Player:
             pygame.Rect(player_x, player_y, grid_size, grid_size),
         )
         
+
+        
+
         if self.position in self.body_segments:
             self.reset()
-            game_data.reset()
             main_menu.menu_showed = False
             self.dead = True
             
