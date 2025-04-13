@@ -15,46 +15,31 @@ gdata = GData()
 player = Player()
 
 game_over_menu_images = [
-    Button(pygame.image.load("src/game_over/restart.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
-    Button(pygame.image.load("src/game_over/quit.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2)
-]
-game_over_menu_selected_images = [
-    pygame.image.load("src/game_over/restart_selected.png"),
-    pygame.image.load("src/game_over/quit_selected.png"),
+    Button(pygame.image.load("src/game_over/restart.png"),pygame.image.load("src/game_over/restart_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
+    Button(pygame.image.load("src/game_over/quit.png"),pygame.image.load("src/game_over/quit_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2)
 ]
 
 main_menu_images = [
-    Button(pygame.image.load("src/menu/main_menu/start.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
-    Button(pygame.image.load("src/menu/main_menu/options.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
-    Button(pygame.image.load("src/menu/quit.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2)
+    Button(pygame.image.load("src/menu/main_menu/start.png"),pygame.image.load("src/menu/main_menu/start_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
+    Button(pygame.image.load("src/menu/main_menu/options.png"),pygame.image.load("src/menu/main_menu/options_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
+    Button(pygame.image.load("src/menu/quit.png"),pygame.image.load("src/menu/quit_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2)
 ]
 main_menu_background = pygame.image.load("src/menu/main_menu/background.png")
 
-main_menu_selected_images = [
-    Button(pygame.image.load("src/menu/main_menu/start_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
-    Button(pygame.image.load("src/menu/main_menu/options_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
-    Button(pygame.image.load("src/menu/quit_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2)
-]
+
 
 options_menu_images = [
-    Button(pygame.image.load("src/menu/options/difficulty_easy.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
-    Button(pygame.image.load("src/menu/options/no_walls.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
-    Button(pygame.image.load("src/menu/options/no_golden_apple.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
-    Button(pygame.image.load("src/menu/quit.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2)
-]
-options_menu_selected_images = [
-    Button(pygame.image.load("src/menu/options/difficulty_easy_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
-    Button(pygame.image.load("src/menu/options/no_walls_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
-    Button(pygame.image.load("src/menu/options/no_golden_apple_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
-    Button(pygame.image.load("src/menu/quit_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2)
+    Button(pygame.image.load("src/menu/options/difficulty_easy.png"),pygame.image.load("src/menu/options/difficulty_easy_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
+    Button(pygame.image.load("src/menu/options/no_walls.png"),pygame.image.load("src/menu/options/no_walls_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
+    Button(pygame.image.load("src/menu/options/no_golden_apple.png"),pygame.image.load("src/menu/options/no_golden_apple_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
+    Button(pygame.image.load("src/menu/quit.png"),pygame.image.load("src/menu/quit_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2)
 ]
 
 
 
-
-main_menu = Menu(main_menu_images, main_menu_selected_images)
-go_menu = Menu(game_over_menu_images, game_over_menu_selected_images)
-options_menu_images = Menu(options_menu_images,options_menu_selected_images)
+main_menu = Menu(main_menu_images)
+go_menu = Menu(game_over_menu_images)
+options_menu_images = Menu(options_menu_images)
 background_music = pygame.mixer.Sound("src\OST\ost.mp3")
 
 while gdata.running:

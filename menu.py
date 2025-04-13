@@ -10,7 +10,7 @@ def get_sprite(spritesheet,width,height):
     return image
 
 class Button:
-    def __init__(self,sprite,x,y):
+    def __init__(self,sprite,selected_sprite,x,y):
 
         self.button_pos = Vector2(x,y)
 
@@ -18,10 +18,20 @@ class Button:
         self.height = sprite.get_height()
 
         self.image = pygame.transform.scale(sprite,(self.width,self.height))    
+        self.selected_image = pygame.transform.scale(selected_sprite,(self.width,self.height))    
         self.rect = self.image.get_rect()
-        self.rect.midbottom = (self.button_pos.x,self.button_pos.y + self.height/2)
+        self.rect.topleft = (x,y)
     def draw(self,gdata,offset,scale):
-        
+        mouse_pos = Vector2(pygame.mouse.get_pos())
+        if self.rect.collidepoint(mouse_pos.x-offset.x,mouse_pos.y-offset.y*scale):
+            gdata.screen.blit(
+            self.selected_image,
+                (
+                    self.button_pos.x + offset.x,
+                    self.button_pos.y + offset.y*scale
+                ),
+            )
+            return
         gdata.screen.blit(
             self.image,
             (
@@ -32,12 +42,10 @@ class Button:
 
 
 class Menu:
-    def __init__(self, options, selected_options):
-        self.options = options
-        self.selected_options = selected_options
+    def __init__(self, option):
+        self.options = option
 
         self.NUMBER_OF_OPTIONS = len(self.options)
-        self.NUMBER_OF_SELECTED_OPTIONS = len(self.selected_options)
 
         self.selected_index = 0
         self.menu_showed = False
@@ -45,59 +53,49 @@ class Menu:
         self.last_key_press = 0 
         self.key_delay = 200  
     def handle_input(self):
-        current_time = pygame.time.get_ticks()
         current_menu_key = pygame.key.get_pressed()
-        
-        if current_time - self.last_key_press > self.key_delay:
-            
-            if current_menu_key[pygame.K_w] and self.selected_index > 0:
-                self.selected_index -= 1
-                self.last_key_press = current_time  
-                pygame.time.wait(100)
-            if current_menu_key[pygame.K_s] and self.selected_index < len(self.options) - 1:
-                self.selected_index += 1
-                self.last_key_press = current_time  
-                pygame.time.wait(100)
-            if current_menu_key[pygame.K_RETURN]:
-                self.last_key_press = current_time  
-                pygame.time.wait(100)
+                    
+        if current_menu_key[pygame.K_w] and self.selected_index > 0:
+            self.selected_index -= 1
+            pygame.time.wait(100)
+        if current_menu_key[pygame.K_s] and self.selected_index < len(self.options) - 1:
+            self.selected_index += 1
+            pygame.time.wait(100)
+        if current_menu_key[pygame.K_RETURN]:
+            pygame.time.wait(100)
         return current_menu_key
     
     def render_menu(self, gdata):
         offset = Vector2(-196/2,70)
         for i in range(self.NUMBER_OF_OPTIONS):
-            selected_image = self.selected_options[i]
             image = self.options[i]
-            if i == self.selected_index:
-                selected_image.draw(gdata,offset,i)
-            else:
-                image.draw(gdata,offset,i)
-    
+            image.draw(gdata,offset,i)
+
     def change_buttons(self, gdata, choice):
         if choice == 0:
             if gdata.difficulty == 20:
                 self.options[0].image = pygame.image.load("src/menu/options/difficulty_easy.png")
-                self.selected_options[0].image = pygame.image.load("src/menu/options/difficulty_easy_selected.png")
+                self.options[0].selected_image = pygame.image.load("src/menu/options/difficulty_easy_selected.png")
             elif gdata.difficulty == 25:
                 self.options[0].image = pygame.image.load("src/menu/options/difficulty_medium.png")
-                self.selected_options[0].image = pygame.image.load("src/menu/options/difficulty_medium_selected.png")
+                self.options[0].selected_image = pygame.image.load("src/menu/options/difficulty_medium_selected.png")
             elif gdata.difficulty == 30:
                 self.options[0].image = pygame.image.load("src/menu/options/difficulty_hard.png")
-                self.selected_options[0].image = pygame.image.load("src/menu/options/difficulty_hard_selected.png")
+                self.options[0].selected_image = pygame.image.load("src/menu/options/difficulty_hard_selected.png")
         elif choice == 1:
             if gdata.solid_wall:
                 self.options[1].image = pygame.image.load("src/menu/options/solid_walls.png")
-                self.selected_options[1].image = pygame.image.load("src/menu/options/solid_walls_selected.png")
+                self.options[1].selected_image = pygame.image.load("src/menu/options/solid_walls_selected.png")
             else:
                 self.options[1].image = pygame.image.load("src/menu/options/no_walls.png")
-                self.selected_options[1].image = pygame.image.load("src/menu/options/no_walls_selected.png")
+                self.options[1].selected_image = pygame.image.load("src/menu/options/no_walls_selected.png")
         elif choice == 2:
             if gdata.golden_apple:
                 self.options[2].image = pygame.image.load("src/menu/options/golden_apple.png")
-                self.selected_options[2].image = pygame.image.load("src/menu/options/golden_apple_selected.png")
+                self.options[2].selected_image = pygame.image.load("src/menu/options/golden_apple_selected.png")
             else:
                 self.options[2].image = pygame.image.load("src/menu/options/no_golden_apple.png")
-                self.selected_options[2].image = pygame.image.load("src/menu/options/no_golden_apple_selected.png")
+                self.options[2].selected_image = pygame.image.load("src/menu/options/no_golden_apple_selected.png")
     
     def options_menu(self,gdata,main_menu):
         current_menu_key = self.handle_input()
