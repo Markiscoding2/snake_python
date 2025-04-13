@@ -9,6 +9,28 @@ def get_sprite(spritesheet,width,height):
     image.blit(spritesheet,(0,0),(0,0),width,height)
     return image
 
+class Button:
+    def __init__(self,sprite,x,y):
+
+        self.button_pos = Vector2(x,y)
+
+        self.width = sprite.get_width()
+        self.height = sprite.get_height()
+
+        self.image = pygame.transform.scale(sprite,(self.width,self.height))    
+        self.rect = self.image.get_rect()
+        self.rect.midbottom = (self.button_pos.x,self.button_pos.y + self.height/2)
+    def draw(self,gdata):
+
+        gdata.screen.blit(
+            self.image,
+            (
+                self.rect.midbottom.x,
+                self.rect.midbottom.y + self.rect.midbottom.y/2
+            ),
+        )
+
+
 class Menu:
     def __init__(self, options, selected_options):
         self.options = options
