@@ -20,13 +20,13 @@ class Button:
         self.image = pygame.transform.scale(sprite,(self.width,self.height))    
         self.rect = self.image.get_rect()
         self.rect.midbottom = (self.button_pos.x,self.button_pos.y + self.height/2)
-    def draw(self,gdata):
-
+    def draw(self,gdata,offset,scale):
+        
         gdata.screen.blit(
             self.image,
             (
-                self.rect.midbottom.x,
-                self.rect.midbottom.y + self.rect.midbottom.y/2
+                self.button_pos.x + offset.x,
+                self.button_pos.y + offset.y*scale
             ),
         )
 
@@ -64,51 +64,40 @@ class Menu:
         return current_menu_key
     
     def render_menu(self, gdata):
+        offset = Vector2(-196/2,70)
         for i in range(self.NUMBER_OF_OPTIONS):
             selected_image = self.selected_options[i]
-            images = self.options[i]
+            image = self.options[i]
             if i == self.selected_index:
-                gdata.screen.blit(
-                    selected_image,
-                    (
-                        gdata.S_WIDTH / 2 - gdata.BUTTONS_WIDTH / 2,
-                        gdata.S_HEIGHT / 2 + 70 * i,
-                    ),
-                )
+                selected_image.draw(gdata,offset,i)
             else:
-                gdata.screen.blit(
-                    images,
-                    (
-                        gdata.S_WIDTH / 2 - gdata.BUTTONS_WIDTH / 2,
-                        gdata.S_HEIGHT / 2 + 70 * i,
-                    ),
-                )
+                image.draw(gdata,offset,i)
     
     def change_buttons(self, gdata, choice):
         if choice == 0:
             if gdata.difficulty == 20:
-                self.options[0] = pygame.image.load("src/menu/options/difficulty_easy.png")
-                self.selected_options[0] = pygame.image.load("src/menu/options/difficulty_easy_selected.png")
+                self.options[0].image = pygame.image.load("src/menu/options/difficulty_easy.png")
+                self.selected_options[0].image = pygame.image.load("src/menu/options/difficulty_easy_selected.png")
             elif gdata.difficulty == 25:
-                self.options[0] = pygame.image.load("src/menu/options/difficulty_medium.png")
-                self.selected_options[0] = pygame.image.load("src/menu/options/difficulty_medium_selected.png")
+                self.options[0].image = pygame.image.load("src/menu/options/difficulty_medium.png")
+                self.selected_options[0].image = pygame.image.load("src/menu/options/difficulty_medium_selected.png")
             elif gdata.difficulty == 30:
-                self.options[0] = pygame.image.load("src/menu/options/difficulty_hard.png")
-                self.selected_options[0] = pygame.image.load("src/menu/options/difficulty_hard_selected.png")
+                self.options[0].image = pygame.image.load("src/menu/options/difficulty_hard.png")
+                self.selected_options[0].image = pygame.image.load("src/menu/options/difficulty_hard_selected.png")
         elif choice == 1:
             if gdata.solid_wall:
-                self.options[1] = pygame.image.load("src/menu/options/solid_walls.png")
-                self.selected_options[1] = pygame.image.load("src/menu/options/solid_walls_selected.png")
+                self.options[1].image = pygame.image.load("src/menu/options/solid_walls.png")
+                self.selected_options[1].image = pygame.image.load("src/menu/options/solid_walls_selected.png")
             else:
-                self.options[1] = pygame.image.load("src/menu/options/no_walls.png")
-                self.selected_options[1] = pygame.image.load("src/menu/options/no_walls_selected.png")
+                self.options[1].image = pygame.image.load("src/menu/options/no_walls.png")
+                self.selected_options[1].image = pygame.image.load("src/menu/options/no_walls_selected.png")
         elif choice == 2:
             if gdata.golden_apple:
-                self.options[2] = pygame.image.load("src/menu/options/golden_apple.png")
-                self.selected_options[2] = pygame.image.load("src/menu/options/golden_apple_selected.png")
+                self.options[2].image = pygame.image.load("src/menu/options/golden_apple.png")
+                self.selected_options[2].image = pygame.image.load("src/menu/options/golden_apple_selected.png")
             else:
-                self.options[2] = pygame.image.load("src/menu/options/no_golden_apple.png")
-                self.selected_options[2] = pygame.image.load("src/menu/options/no_golden_apple_selected.png")
+                self.options[2].image = pygame.image.load("src/menu/options/no_golden_apple.png")
+                self.selected_options[2].image = pygame.image.load("src/menu/options/no_golden_apple_selected.png")
     
     def options_menu(self,gdata,main_menu):
         current_menu_key = self.handle_input()
