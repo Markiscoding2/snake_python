@@ -6,16 +6,9 @@ from pygame import *
 def swap(a, b):
     return b, a
 
-
-
-
-
-
-
-
 class Player:
     def __init__(self):
-        self.GRID_SIZE = 1
+        self.GRID_SIZE = 40
         
         self.START_X = 800 - 800%self.GRID_SIZE
         self.START_Y = 640 - 640%self.GRID_SIZE
@@ -174,8 +167,6 @@ class Player:
             player_color,
             pygame.Rect(player_x, player_y, grid_size, grid_size),
         )
-        
-
         
 
         if self.position in self.body_segments:

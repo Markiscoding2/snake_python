@@ -24,6 +24,7 @@ main_menu_images = [
     Button(pygame.image.load("src/menu/main_menu/options.png"),pygame.image.load("src/menu/main_menu/options_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2),
     Button(pygame.image.load("src/menu/quit.png"),pygame.image.load("src/menu/quit_selected.png"),gdata.S_WIDTH/2,gdata.S_HEIGHT/2)
 ]
+
 main_menu_background = pygame.image.load("src/menu/main_menu/background.png")
 
 
@@ -45,7 +46,8 @@ background_music = pygame.mixer.Sound("src\OST\ost.mp3")
 while gdata.running:
     pygame.display.flip()
     gdata.clock.tick(60)
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT:
             gdata.running = False
     
@@ -53,12 +55,12 @@ while gdata.running:
     if not main_menu.menu_showed:
         gdata.screen.blit(main_menu_background, (0, 0)) 
         if not player.dead and not gdata.options_showed:
-            main_menu.print_menu(gdata)
+            main_menu.print_menu(gdata,events)
         elif player.dead:
             background_music.stop()
-            go_menu.goprint_menu(player, gdata, main_menu)
+            go_menu.goprint_menu(player, gdata, main_menu,events)
         elif gdata.options_showed:
-            options_menu_images.options_menu(gdata, main_menu)
+            options_menu_images.options_menu(gdata, main_menu,events)
     else:
         gdata.clock.tick(gdata.difficulty)
         if not gdata.music_playing:
