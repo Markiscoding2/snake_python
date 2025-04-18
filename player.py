@@ -6,6 +6,11 @@ from pygame import *
 def swap(a, b):
     return b, a
 
+class segment:
+    def __init__(self,position,sprite):
+        self.position = position 
+        self.sprite = sprite       
+
 class Player:
     def __init__(self):
         self.GRID_SIZE = 40
