@@ -6,14 +6,30 @@ from pygame import *
 def swap(a, b):
     return b, a
 
-class segment:
-    def __init__(self,position,sprite):
-        self.position = position 
-        self.sprite = sprite       
 
 class Player:
-    def __init__(self):
-        self.GRID_SIZE = 40
+    class Segment:
+        @staticmethod
+        def get_sprite(spritesheet, x, y):
+            image = pygame.Surface((64, 64), pygame.SRCALPHA)
+            image.blit(spritesheet, (0, 0), pygame.Rect(x, y, 32, 32))
+            return image
+
+        @staticmethod
+        def load_sprites(sheet):
+            return {
+                (0,0): Player.Segment.get_sprite(sheet, 0, 0),
+                (32,0): Player.Segment.get_sprite(sheet, 32, 0),
+                (0,32): Player.Segment.get_sprite(sheet, 0, 32),
+                (32,32): Player.Segment.get_sprite(sheet, 32, 32),
+            }
+
+        def __init__(self, position, spritesheet):
+            self.position = position
+            self.sprite = Player.Segment.get_sprite(spritesheet)
+
+    def __init__(self,gdata):
+        self.GRID_SIZE = 32
         
         self.START_X = 800 - 800%self.GRID_SIZE
         self.START_Y = 640 - 640%self.GRID_SIZE
@@ -25,6 +41,9 @@ class Player:
         self.golden_apple_image = pygame.image.load("src/sprites/golden_apple.png")
         self.golden_apple_active = False
         
+        self.head_sprites = Player.Segment.load_sprites(gdata.head_sprite_image) 
+        self.head_sprite = self.head_sprites[(0,0)]
+
         self.position = Vector2(self.START_X, self.START_Y)
         self.direction = Vector2(0, 0)
 
@@ -38,7 +57,8 @@ class Player:
             random.randrange(self.GRID_SIZE, self.MAX_X, self.GRID_SIZE),
             random.randrange(self.GRID_SIZE, self.MAX_Y, self.GRID_SIZE),
         )
-
+   
+    
     def reset(self):
         self.__init__()
 
@@ -46,28 +66,31 @@ class Player:
         self.body_segments.append([self.position.x, self.position.y])
 
     def Movement(self, game_data, main_menu):
-
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[pygame.K_ESCAPE]:
             game_data.running = False
-
         if pressed_keys[pygame.K_a] and self.direction.x == 0 and not pressed_keys[pygame.K_w] and not pressed_keys[pygame.K_s]:
             self.direction = Vector2(-1, 0)
+            self.head_sprite = self.head_sprites[(0,0)]
 
         elif pressed_keys[pygame.K_d] and self.direction.x == 0 and not pressed_keys[pygame.K_w] and not pressed_keys[pygame.K_s]:
             self.direction = Vector2(1, 0)
+            self.head_sprite = self.head_sprites[(0,32)]
 
         elif pressed_keys[pygame.K_w] and self.direction.y == 0:
             self.direction = Vector2(0, -1)
+            self.head_sprite = self.head_sprites[(32,0)]
 
         elif pressed_keys[pygame.K_s] and self.direction.y == 0:
             self.direction = Vector2(0, 1)
+            self.head_sprite = self.head_sprites[(32,32)]
 
         elif self.direction == Vector2(0, 0):
             return
 
         new_position = self.position + self.direction * self.GRID_SIZE
 
+        
         if not game_data.solid_wall:
             if new_position.x < 0:
                 new_position.x = self.MAX_X
@@ -166,11 +189,13 @@ class Player:
                 self.apple_position.y,
             ),
         )
-
-        pygame.draw.rect(
-            game_data.screen,
-            player_color,
-            pygame.Rect(player_x, player_y, grid_size, grid_size),
+        
+        game_data.screen.blit(
+            self.head_sprite,
+            (
+                player_x,
+                player_y
+            ),
         )
         
 

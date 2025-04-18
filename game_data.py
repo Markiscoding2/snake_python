@@ -27,7 +27,7 @@ class GData:
             ("src/menu/quit.png", "src/menu/quit_selected.png")
         ]
 
-
+        self.head_sprite_image = pygame.image.load("src\sprites\snake sprites\head_segments.png")
         
         self.screen = pygame.display.set_mode((1920, 1080), FULLSCREEN)
         self.screen.fill((0, 0, 0))
