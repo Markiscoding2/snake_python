@@ -84,6 +84,21 @@ class Menu:
                 return i
         return -1
     
+    def print_menu(self, gdata, events):
+        self.selected_index = self.render_menu(gdata,events)
+
+        if self.selected_index != -1:
+            self.menu_showed = True
+
+
+        if self.selected_index == 1 and self.menu_showed == True:
+            gdata.options_showed = True
+            self.menu_showed = False
+        if self.selected_index == 2 and self.menu_showed == True:
+            gdata.running = False
+
+
+class options_menu(Menu):
     def change_buttons(self, gdata, choice):
         difficulty_map = {
             20 : "difficulty_easy",
@@ -118,7 +133,7 @@ class Menu:
             self.buttons[2].image = pygame.image.load(golden_apple_image)
             self.buttons[2].selected_image = pygame.image.load(golden_apple_image_selected)
     
-    def options_menu(self,gdata,main_menu,events):
+    def print_menu(self,gdata,main_menu,events):
         self.selected_index = self.render_menu(gdata,events)
 
         if self.selected_index == 0:
@@ -148,7 +163,9 @@ class Menu:
 
             self.selected_index = 2
 
-    def goprint_menu(self, player, gdata, main_menu,events):
+
+class game_over_menu(Menu):
+    def print_menu(self, player, gdata, main_menu,events):
         self.selected_index = self.render_menu(gdata,events)
 
         if self.selected_index != -1:
@@ -162,17 +179,3 @@ class Menu:
             elif self.selected_index == 1:
                 gdata.running = False
 
-
-
-    def print_menu(self, gdata, events):
-        self.selected_index = self.render_menu(gdata,events)
-
-        if self.selected_index != -1:
-            self.menu_showed = True
-
-
-        if self.selected_index == 1 and self.menu_showed == True:
-            gdata.options_showed = True
-            self.menu_showed = False
-        if self.selected_index == 2 and self.menu_showed == True:
-            gdata.running = False

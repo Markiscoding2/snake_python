@@ -17,8 +17,8 @@ player = Player()
 main_menu_background = pygame.image.load("src/menu/main_menu/background.png")
 
 main_menu = Menu(create_menu(gdata.main_menu_data,gdata))
-go_menu = Menu(create_menu(gdata.game_over_menu_data,gdata))
-options_menu_images = Menu(create_menu(gdata.options_menu_data,gdata))
+game_over_menu = game_over_menu(create_menu(gdata.game_over_menu_data,gdata))
+options_menu = options_menu(create_menu(gdata.options_menu_data,gdata))
 background_music = pygame.mixer.Sound("src\OST\ost.mp3")
 
 while gdata.running:
@@ -36,9 +36,9 @@ while gdata.running:
             main_menu.print_menu(gdata,events)
         elif player.dead:
             background_music.stop()
-            go_menu.goprint_menu(player, gdata, main_menu,events)
+            game_over_menu.print_menu(player, gdata, main_menu,events)
         elif gdata.options_showed:
-            options_menu_images.options_menu(gdata, main_menu,events)
+            options_menu.print_menu(gdata, main_menu,events)
     else:
         gdata.clock.tick(gdata.difficulty)
         if not gdata.music_playing:
