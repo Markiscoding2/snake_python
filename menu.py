@@ -26,7 +26,7 @@ class Button:
     def draw(self,gdata,events):
         mouse_pos = Vector2(pygame.mouse.get_pos())
         if self.rect.collidepoint(mouse_pos.x,mouse_pos.y):
-
+            
             gdata.screen.blit(
             self.selected_image,
                 (
