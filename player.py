@@ -6,22 +6,15 @@ from pygame import *
 def swap(a, b):
     return b, a
 
-
-
-
-
-
-
-
 class Player:
     def __init__(self):
         self.GRID_SIZE = 40
         
-        self.START_X = 800
-        self.START_Y = 640
+        self.START_X = 800 - 800%self.GRID_SIZE
+        self.START_Y = 640 - 640%self.GRID_SIZE
 
-        self.MAX_X = 1880
-        self.MAX_Y = 1040
+        self.MAX_X = 1920 - 1920%self.GRID_SIZE
+        self.MAX_Y = 1080 - 1080%self.GRID_SIZE
 
         self.apple_image = pygame.image.load("src/sprites/apple.png")
         self.golden_apple_image = pygame.image.load("src/sprites/golden_apple.png")
@@ -174,8 +167,6 @@ class Player:
             player_color,
             pygame.Rect(player_x, player_y, grid_size, grid_size),
         )
-        
-
         
 
         if self.position in self.body_segments:
