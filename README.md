@@ -56,4 +56,4 @@ Built with ❤️ using Python and Pygame by [Ele].
 
 ## 📜 License
 
-MIT License (add if you'd like to allow free use)
+MIT License 
