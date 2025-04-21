@@ -48,16 +48,6 @@ Welcome to the ultimate Snake game, reimagined with golden apples, dynamic menus
 
 ---
 
-## ✨ Roadmap / Ideas
-
-- [ ] Add power-ups (speed boost, invincibility)
-- [ ] Visual themes (e.g., neon, retro)
-- [ ] Online leaderboard
-- [ ] Settings persistence
-- [ ] Animated transitions
-
----
-
 ## 💡 Credits
 
 Built with ❤️ using Python and Pygame by [Ele].

@@ -4,12 +4,12 @@ from player_class import Player
 from game_data import GData
 from menu import *
 
-# add background
-# fix some logic
-# refactor code
-# add better sprites
-# implement some easter eggs for dia
-# add different soundtracks, and check when a soundtrack ends
+# ✨ Roadmap / Ideas
+#- [ ] Add power-ups (speed boost, invincibility)
+#- [ ] Visual themes (e.g., neon, retro)
+#- [ ] Online leaderboard
+#- [ ] Settings persistence
+#- [ ] Animated transitions
 
 gdata = GData()
 player = Player()
