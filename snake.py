@@ -22,9 +22,7 @@ options_menu = options_menu(create_menu(gdata.options_menu_data,gdata))
 exit_button = load_button("src\sprites\exit_button.png","src\sprites\exit_button_selected.png",1920-50,0)
 background_music = pygame.mixer.Sound("src\OST\ost.mp3")
 
-read_high_score = open("high_score.txt","r")
-player.high_score = read_high_score.read()
-read_high_score.close
+new_high = 0
 
 while gdata.running:
     pygame.display.flip()
@@ -42,6 +40,9 @@ while gdata.running:
         elif player.dead:
             background_music.stop()
             game_over_menu.print_menu(player, gdata, main_menu,events)
+            write_high_score = open("high_score.txt","w")
+            write_high_score.write(f"{new_high}")
+            write_high_score.close
         elif gdata.options_showed:
             options_menu.print_menu(gdata, main_menu,events)
     else:
@@ -53,9 +54,7 @@ while gdata.running:
         player.Eating(gdata)
         player.Movement(gdata,main_menu)
         player.rendering(gdata, main_menu,exit_button,events)
+        if player.score > int(player.high_score):
+            new_high = player.score
 
-if player.score > int(player.high_score):
-    write_high_score = open("high_score.txt","w")
-    write_high_score.write(f"{player.score}")
-    write_high_score.close
 pygame.quit()

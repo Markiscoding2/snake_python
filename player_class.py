@@ -26,9 +26,13 @@ class Player:
 
         self.body_segments = deque()
         self.golden_apple_positions = deque()
-        
+
         self.score = 0
-        self.high_score = 0
+        read_high_score = open("high_score.txt","r")
+        self.high_score = read_high_score.read()
+        read_high_score.close
+
+
 
         self.dead = False
         self.apple_position = Vector2(
@@ -162,7 +166,9 @@ class Player:
         
         if pressed_exit == True:
             gdata.running = False
-
+            write_high_score = open("high_score.txt","w")
+            write_high_score.write(f"{self.score}")
+            write_high_score.close
         if self.golden_apple_active:
             for golden_apple in self.golden_apple_positions:
                 gdata.screen.blit(
