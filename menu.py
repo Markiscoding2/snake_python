@@ -1,7 +1,7 @@
 import pygame
 from pygame import *
 from game_data import GData
-from player import Player
+from player_class import Player
 
 
 def get_sprite(spritesheet,width,height):
@@ -10,8 +10,6 @@ def get_sprite(spritesheet,width,height):
     return image
 
 class Button:
-
-
     def __init__(self,sprite,selected_sprite,x,y):
 
         self.button_pos = Vector2(x,y)
