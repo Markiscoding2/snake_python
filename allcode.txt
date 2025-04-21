@@ -1,0 +1,515 @@
+#game_data.py
+import pygame
+import random
+from pygame import *
+
+
+class GData:
+    def __init__(self):
+
+        pygame.init()
+        pygame.display.set_caption("Snake")
+
+        self.game_over_menu_data = [
+            ("src/game_over/restart.png", "src/game_over/restart_selected.png"),
+            ("src/game_over/quit.png", "src/game_over/quit_selected.png")
+        ]
+
+        self.main_menu_data = [
+            ("src/menu/main_menu/start.png", "src/menu/main_menu/start_selected.png"),
+            ("src/menu/main_menu/options.png", "src/menu/main_menu/options_selected.png"),
+            ("src/menu/quit.png", "src/menu/quit_selected.png")
+        ]
+
+        self.options_menu_data = [
+            ("src/menu/options/difficulty_easy.png", "src/menu/options/difficulty_easy_selected.png"),
+            ("src/menu/options/no_walls.png", "src/menu/options/no_walls_selected.png"),
+            ("src/menu/options/no_golden_apple.png", "src/menu/options/no_golden_apple_selected.png"),
+            ("src/menu/quit.png", "src/menu/quit_selected.png")
+        ]
+
+
+        
+        self.screen = pygame.display.set_mode((1920, 1080), FULLSCREEN)
+        self.screen.fill((0, 0, 0))
+
+        self.S_WIDTH = self.screen.get_width()
+        self.S_HEIGHT = self.screen.get_height()
+        
+        self.BUTTONS_WIDTH = 196
+
+        self.options_showed = False
+        self.difficulty = 20
+        self.solid_wall = False
+        self.golden_apple = False
+        self.music_playing = False
+
+        
+        self.clock = pygame.time.Clock()
+        self.clock.tick(self.difficulty)
+        self.running = True
+
+        self.font = pygame.font.Font(None, 50)
+
+        self.alg = 0
+        self.menu_showed = False
+    def reset(self):
+        self.__init__()
+#player_class
+import pygame
+import random
+from collections import deque
+from pygame import *
+
+def swap(a, b):
+    return b, a
+
+class Player:
+    def __init__(self):
+        self.GRID_SIZE = 40
+        
+        self.START_X = 800 - 800%self.GRID_SIZE
+        self.START_Y = 640 - 640%self.GRID_SIZE
+
+        self.MAX_X = 1920 - 2*1920%self.GRID_SIZE
+        self.MAX_Y = 1080 - 2*1080%self.GRID_SIZE
+
+        self.apple_image = pygame.image.load("src/sprites/apple.png")
+        self.golden_apple_image = pygame.image.load("src/sprites/golden_apple.png")
+        self.golden_apple_active = False
+        self.golden_apple_next = False  
+        
+        self.position = Vector2(self.START_X, self.START_Y)
+        self.direction = Vector2(0, 0)
+
+        self.body_segments = deque()
+        self.golden_apple_positions = deque()
+
+        self.score = 0
+        read_high_score = open("high_score.txt","r")
+        self.high_score = read_high_score.read()
+        read_high_score.close
+
+
+
+        self.dead = False
+        self.apple_position = Vector2(
+            random.randrange(self.GRID_SIZE, self.MAX_X, self.GRID_SIZE),
+            random.randrange(self.GRID_SIZE, self.MAX_Y, self.GRID_SIZE),
+        )
+
+    def reset(self):
+        self.__init__()
+
+    def add_segment(self):
+        self.body_segments.append([self.position.x, self.position.y])
+
+    def Movement(self, gdata, main_menu):
+
+        pressed_keys = pygame.key.get_pressed()
+        if pressed_keys[pygame.K_ESCAPE]:
+            gdata.running = False
+
+        if pressed_keys[pygame.K_a] and self.direction.x == 0 and not pressed_keys[pygame.K_w] and not pressed_keys[pygame.K_s]:
+            self.direction = Vector2(-1, 0)
+
+        elif pressed_keys[pygame.K_d] and self.direction.x == 0 and not pressed_keys[pygame.K_w] and not pressed_keys[pygame.K_s]:
+            self.direction = Vector2(1, 0)
+
+        elif pressed_keys[pygame.K_w] and self.direction.y == 0:
+            self.direction = Vector2(0, -1)
+
+        elif pressed_keys[pygame.K_s] and self.direction.y == 0:
+            self.direction = Vector2(0, 1)
+
+        elif self.direction == Vector2(0, 0):
+            return
+
+        new_position = self.position + self.direction * self.GRID_SIZE
+
+        if not gdata.solid_wall:
+            if new_position.x < 0:
+                new_position.x = self.MAX_X
+            elif new_position.x > self.MAX_X:
+                new_position.x = 0
+                
+            if new_position.y < 0:
+                new_position.y = self.MAX_Y
+            elif new_position.y > self.MAX_Y:
+                new_position.y = 0
+        
+            if 0 <= new_position.x <= self.MAX_X and 0 <= new_position.y <= self.MAX_Y:
+                old_position = self.position
+                self.position = new_position
+
+                if self.body_segments:
+
+                    self.body_segments.appendleft(old_position)
+                    self.body_segments.pop()
+        else:
+            if new_position.x <= 0 or new_position.x >= self.MAX_X or new_position.y <= 0 or new_position.y >= self.MAX_Y:
+                self.dead = True
+                main_menu.menu_showed = False
+                self.position = (self.START_X, self.START_Y)
+                self.body_segments.clear()
+                self.score = 0
+                return
+
+            if 0 < new_position.x < self.MAX_X and 0 < new_position.y < self.MAX_Y:
+                old_position = self.position
+                self.position = new_position
+
+                if self.body_segments:
+                    self.body_segments.appendleft(old_position)
+                    self.body_segments.pop()
+
+    def Eating(self, gdata):
+        if self.golden_apple_active:
+            if self.position in self.golden_apple_positions:
+                eating_sound = pygame.mixer.Sound("src/SFX/eating_SFX.mp3")
+                eating_sound.play()
+                self.golden_apple_positions.remove(self.position)
+                self.score += 1
+                self.add_segment()
+                
+            if len(self.golden_apple_positions) == 0:
+                self.golden_apple_active = False
+                self.golden_apple_positions.clear()
+
+        if self.position == self.apple_position:
+            eating_sound = pygame.mixer.Sound("src/SFX/eating_SFX.mp3")
+            eating_sound.play()
+            new_apple_position = Vector2(
+                random.randrange(self.GRID_SIZE, self.MAX_X, self.GRID_SIZE),
+                random.randrange(self.GRID_SIZE, self.MAX_Y, self.GRID_SIZE)
+            )
+            while new_apple_position in self.body_segments or new_apple_position == self.position:
+                new_apple_position = Vector2(
+                    random.randrange(self.GRID_SIZE, self.MAX_X, self.GRID_SIZE),
+                    random.randrange(self.GRID_SIZE, self.MAX_Y, self.GRID_SIZE)
+                )
+            if gdata.golden_apple and not self.golden_apple_active:
+                if self.golden_apple_next:
+
+                    self.golden_apple_active = True
+                    self.golden_apple_next = False
+
+                    self.apple_image,self.golden_apple_image = swap(self.apple_image,self.golden_apple_image)
+                    
+                    for _ in range(5):
+                        new_golden_apple_position = self.position
+
+                        while self.position == new_golden_apple_position:
+                            new_golden_apple_position = Vector2(
+                                random.randrange(self.GRID_SIZE, self.MAX_X, self.GRID_SIZE),
+                                random.randrange(self.GRID_SIZE, self.MAX_Y, self.GRID_SIZE)
+                            )
+                        
+                        self.golden_apple_positions.append(new_golden_apple_position)     
+            self.apple_position = new_apple_position
+            self.score += 1
+            self.add_segment()
+            if random.randint(0, 1) == 0 and gdata.golden_apple and not self.golden_apple_active:
+                self.golden_apple_next = True
+                self.apple_image,self.golden_apple_image = swap(self.apple_image,self.golden_apple_image)
+
+    def rendering(self, gdata, main_menu,exit_button,events):
+        player_x, player_y = self.position
+
+        grid_size = self.GRID_SIZE
+
+        player_color = "green"
+        
+        pressed_exit = exit_button.draw(gdata,events)
+        
+        if pressed_exit == True:
+            gdata.running = False
+            write_high_score = open("high_score.txt","w")
+            write_high_score.write(f"{self.score}")
+            write_high_score.close
+        if self.golden_apple_active:
+            for golden_apple in self.golden_apple_positions:
+                gdata.screen.blit(
+                    self.golden_apple_image,
+                    (
+                        golden_apple.x,
+                        golden_apple.y,
+                    ),
+                )
+        gdata.screen.blit(
+            self.apple_image,
+            (
+                self.apple_position.x,
+                self.apple_position.y,
+            ),
+        )
+
+        pygame.draw.rect(
+            gdata.screen,
+            player_color,
+            pygame.Rect(player_x, player_y, grid_size, grid_size),
+        )
+        
+
+        if self.position in self.body_segments:
+            self.reset()
+            main_menu.menu_showed = False
+            self.dead = True
+            
+        for segment in self.body_segments:
+            pygame.draw.rect(
+                gdata.screen,
+                player_color,
+                pygame.Rect(segment.x, segment.y, grid_size, grid_size),
+            )
+        gdata.screen.blit(
+            gdata.font.render(f"Score: {self.score}", True, (255, 0, 0)),
+            (grid_size, grid_size),
+        )
+        gdata.screen.blit(
+            gdata.font.render(f"High Score: {self.high_score}", True, (255, 0, 0)),
+            (grid_size, grid_size+50)
+        )
+
+#menu.py
+import pygame
+from pygame import *
+from game_data import GData
+from player_class import Player
+
+
+def get_sprite(spritesheet,width,height):
+    image = pygame.Surface((width,height)).convert_alpha()
+    image.blit(spritesheet,(0,0),(0,0),width,height)
+    return image
+
+class Button:
+    def __init__(self,sprite,selected_sprite,x,y):
+
+        self.button_pos = Vector2(x,y)
+
+        self.width = sprite.get_width()
+        self.height = sprite.get_height()
+
+        self.image = pygame.transform.scale(sprite,(self.width,self.height))    
+        self.selected_image = pygame.transform.scale(selected_sprite,(self.width,self.height))    
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x,y)
+    def draw(self,gdata,events):
+        mouse_pos = Vector2(pygame.mouse.get_pos())
+        if self.rect.collidepoint(mouse_pos.x,mouse_pos.y):
+            
+            gdata.screen.blit(
+            self.selected_image,
+                (
+                    self.button_pos.x,
+                    self.button_pos.y 
+                ),
+            )
+
+            for event in events:
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+
+                    return True
+                
+            return False
+        gdata.screen.blit(
+            self.image,
+            (
+                self.button_pos.x,
+                self.button_pos.y 
+            ),
+        )
+        return False
+
+def load_button(image_path,image_path_selected,x,y):
+    return Button(
+        pygame.image.load(image_path),
+        pygame.image.load(image_path_selected),
+        x,
+        y
+    )
+
+def create_menu(button_image_pairs, gdata):
+    button_arr = []
+    center_x = gdata.S_WIDTH / 2 - 196/2
+    start_y = gdata.S_HEIGHT / 2
+
+    for i, (img, selected_img) in enumerate(button_image_pairs):
+        y = start_y + i * 70
+        button_arr.append(load_button(img, selected_img, center_x, y))
+
+    return button_arr
+class Menu:
+    def __init__(self, all_buttons):
+
+        self.buttons = all_buttons
+        self.NUMBER_OF_OPTIONS = len(self.buttons)
+        self.selected_index = 0
+        self.menu_showed = False
+
+    def render_menu(self, gdata,events):
+        for i in range(self.NUMBER_OF_OPTIONS):
+            image = self.buttons[i]
+            if image.draw(gdata,events):
+                return i
+        return -1
+    
+    def print_menu(self, gdata, events):
+        self.selected_index = self.render_menu(gdata,events)
+
+        if self.selected_index != -1:
+            self.menu_showed = True
+
+
+        if self.selected_index == 1 and self.menu_showed == True:
+            gdata.options_showed = True
+            self.menu_showed = False
+        if self.selected_index == 2 and self.menu_showed == True:
+            gdata.running = False
+
+
+class options_menu(Menu):
+    def change_buttons(self, gdata, choice):
+        difficulty_map = {
+            20 : "difficulty_easy",
+            25 : "difficulty_medium",
+            30 : "difficulty_hard"
+        }
+        difficulty_image = f"src/menu/options/{difficulty_map[gdata.difficulty]}.png"
+        difficulty_image_selected = f"src/menu/options/{difficulty_map[gdata.difficulty]}_selected.png"
+        
+        solid_wall_map = {
+            True : "solid_walls",
+            False : "no_walls"
+        }
+        
+        solid_wall_image = f"src/menu/options/{solid_wall_map[gdata.solid_wall]}.png"
+        solid_wall_image_selected = f"src/menu/options/{solid_wall_map[gdata.solid_wall]}_selected.png"
+
+        golden_apple_map = {
+            True : "golden_apple",
+            False : "no_golden_apple"
+        }
+        golden_apple_image = f"src/menu/options/{golden_apple_map[gdata.golden_apple]}.png"
+        golden_apple_image_selected = f"src/menu/options/{golden_apple_map[gdata.golden_apple]}_selected.png"
+
+        if choice == 0:
+            self.buttons[0].image = pygame.image.load(difficulty_image)
+            self.buttons[0].selected_image = pygame.image.load(difficulty_image_selected)
+        elif choice == 1:
+            self.buttons[1].image = pygame.image.load(solid_wall_image)
+            self.buttons[1].selected_image = pygame.image.load(solid_wall_image_selected)
+        elif choice == 2:
+            self.buttons[2].image = pygame.image.load(golden_apple_image)
+            self.buttons[2].selected_image = pygame.image.load(golden_apple_image_selected)
+    
+    def print_menu(self,gdata,main_menu,events):
+        self.selected_index = self.render_menu(gdata,events)
+
+        if self.selected_index == 0:
+
+            gdata.difficulty += 5
+
+            if gdata.difficulty > 30:
+                gdata.difficulty = 20
+
+            self.change_buttons(gdata, 0)
+
+        elif self.selected_index == 1:
+
+            gdata.solid_wall = not gdata.solid_wall
+
+            self.change_buttons(gdata, 1)
+            
+        elif self.selected_index == 2:
+
+            gdata.golden_apple = not gdata.golden_apple
+            self.change_buttons(gdata, 2)
+            
+        elif self.selected_index == 3:
+
+            gdata.options_showed = False
+            main_menu.menu_showed = False
+
+            self.selected_index = 2
+
+
+class game_over_menu(Menu):
+    def print_menu(self, player, gdata, main_menu,events):
+        self.selected_index = self.render_menu(gdata,events)
+
+        if self.selected_index != -1:
+            player.dead = False  
+
+        if not player.dead:
+            if self.selected_index == 0:
+                player.__init__() 
+                main_menu.menu_showed = False  
+                gdata.music_playing = False
+            elif self.selected_index == 1:
+                gdata.running = False
+
+
+#snake.py
+import pygame
+from pygame import *
+from player_class import Player
+from game_data import GData
+from menu import *
+
+# add background
+# fix some logic
+# refactor code
+# add better sprites
+# implement some easter eggs for dia
+# add different soundtracks, and check when a soundtrack ends
+
+gdata = GData()
+player = Player()
+
+main_menu_background = pygame.image.load("src/menu/main_menu/background.png")
+
+main_menu = Menu(create_menu(gdata.main_menu_data,gdata))
+game_over_menu = game_over_menu(create_menu(gdata.game_over_menu_data,gdata))
+options_menu = options_menu(create_menu(gdata.options_menu_data,gdata))
+exit_button = load_button("src\sprites\exit_button.png","src\sprites\exit_button_selected.png",1920-50,0)
+background_music = pygame.mixer.Sound("src\OST\ost.mp3")
+
+new_high = 0
+
+while gdata.running:
+    pygame.display.flip()
+    gdata.clock.tick(60)
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            gdata.running = False
+    
+    gdata.screen.fill("black")
+    if not main_menu.menu_showed:
+        gdata.screen.blit(main_menu_background, (0, 0)) 
+        if not player.dead and not gdata.options_showed:
+            main_menu.print_menu(gdata,events)
+        elif player.dead:
+            background_music.stop()
+            game_over_menu.print_menu(player, gdata, main_menu,events)
+            write_high_score = open("high_score.txt","w")
+            write_high_score.write(f"{new_high}")
+            write_high_score.close
+        elif gdata.options_showed:
+            options_menu.print_menu(gdata, main_menu,events)
+    else:
+        gdata.clock.tick(gdata.difficulty)
+        if not gdata.music_playing:
+            background_music.play()
+            background_music.set_volume(0.1)
+            gdata.music_playing = True
+        player.Eating(gdata)
+        player.Movement(gdata,main_menu)
+        player.rendering(gdata, main_menu,exit_button,events)
+        if player.score > int(player.high_score):
+            new_high = player.score
+
+pygame.quit()
